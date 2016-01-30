@@ -9,9 +9,9 @@ URL_POST   = '{0}/obp/v1.2.1/banks/{1}/accounts/{2}'.format(API_HOST, BANK_ID, A
 URL_LOGIN  = '{0}/my/logins/direct'.format(API_HOST)
 
 loginData = {
-    'dl_username': 'robert.x.0.gh@example.com',
-    'dl_password': '3e3a3102',
-    'dl_consumer_key': 'adwf5qomvtvtya5ss3z5aizpr2b4hq054aoqa2t2'
+     'dl_username': 'robert.x.0.gh@example.com'
+    ,'dl_password': '3e3a3102' 
+#    ,'dl_consumer_key': 'adwf5qomvtvtya5ss3z5aizpr2b4hq054aoqa2t2'
 }
 
 post_data = {
