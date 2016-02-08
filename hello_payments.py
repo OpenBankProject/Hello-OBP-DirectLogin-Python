@@ -5,8 +5,13 @@ import sys, requests
 # Note: in order to use this example, you need to have at least one account
 # that you can send money from (i.e. be the owner).
 
+USERNAME     = 'robert.x.0.gh@example.com'
+PASSWORD     = '3e3a3102'
+CONSUMER_KEY = 'test' 
+
 # API server URL
-BASE_URL = "http://127.0.0.1:8080"
+BASE_URL  = "http://127.0.0.1:8080"
+LOGIN_URL = '{0}/my/logins/direct'.format(BASE_URL)
 
 # API server will redirect your browser to this URL, should be non-functional
 # You will paste the redirect location here when running the script
@@ -19,35 +24,34 @@ OUR_CURRENCY = 'GBP'
 # Our value to transfer
 OUR_VALUE = '0.01'
 
-URL_LOGIN  = '{0}/my/logins/direct'.format(BASE_URL)
-
-loginData = {
-     'dl_username': 'robert.x.0.gh@example.com'
-    ,'dl_password': '3e3a3102' 
-}
-
 
 # You probably don't need to change those
+loginHeader  = { 'Authorization' : 'DirectLogin username="%s",password="%s",consumer_key="%s"' % (USERNAME, PASSWORD, CONSUMER_KEY)}
 
 # login and receive authorized token
-print 'Login as {0} to {1}'.format(loginData, URL_LOGIN)
-response = requests.post(URL_LOGIN, json=loginData)
-#print response.status_code
-if (response.status_code != 200):
+print 'Login as {0} to {1}'.format(loginHeader, LOGIN_URL)
+r = requests.get(LOGIN_URL, headers=loginHeader)
+
+if (r.status_code != 200):
     print "error: could not login"
     sys.exit(0)
 
 # login ok - create authorization headers
-token = response.text.replace("token=", "")
-directlogin_json = { 'Authorization' : 'DirectLogin dl_token=%s' % token,
-		     'content-type'  : 'application/json' }
+token = r.json()['token']
 
-directlogin      = { 'Authorization' : 'DirectLogin dl_token=%s' % token }
+directlogin  = { 'Authorization' : 'DirectLogin token=%s' % token}
+content_json = { 'content-type'  : 'application/json' }
+limit        = { 'obp_limit'     : '25' }
+
+def merge(x, y):
+    z = x.copy()
+    z.update(y)
+    return z
 
 #get accounts for a specific bank
 print "Private accounts"
 r = requests.get(u"{0}/obp/v1.4.0/banks/{1}/accounts/private".format(BASE_URL, OUR_BANK), headers=directlogin)
-print r.json()
+#print r.json()
 
 accounts = r.json()['accounts']
 for a in accounts:
@@ -60,15 +64,16 @@ print "our account: {0}".format(our_account)
 print "Get owner transactions"
 r = requests.get(u"{0}/obp/v1.4.0/banks/{1}/accounts/{2}/owner/transactions".format(BASE_URL,
     OUR_BANK,
-    our_account), headers=directlogin ) #headers= {'obp_limit': '25'})
+    our_account), headers=merge(directlogin, limit)
+)
 transactions = r.json()['transactions']
 print "Got {0} transactions".format(len(transactions))
 
 print "Get challenge request types"
 r = requests.get(u"{0}/obp/v1.4.0/banks/{1}/accounts/{2}/owner/transaction-request-types".format(BASE_URL,
     OUR_BANK,
-    our_account), headers=directlogin)
-
+    our_account), headers=directlogin
+)
 challenge_type = r.json()[0]['value']
 print challenge_type
 
@@ -78,7 +83,7 @@ payload = '{"to": {"account_id": "' + send_to['account'] +'", "bank_id": "' + se
     '"}, "value": {"currency": "' + OUR_CURRENCY + '", "amount": "' + OUR_VALUE + '"}, "description": "Description abc", "challenge_type" : "' + \
     challenge_type + '"}'
 r = requests.post(u"{0}/obp/v1.4.0/banks/{1}/accounts/{2}/owner/transaction-request-types/{3}/transaction-requests".format(
-    BASE_URL, OUR_BANK, our_account, challenge_type), data=payload, headers=directlogin_json)
+    BASE_URL, OUR_BANK, our_account, challenge_type), data=payload, headers=merge(directlogin, content_json))
 initiate_response = r.json()
 
 if "error" in initiate_response:
@@ -92,7 +97,7 @@ if (initiate_response['challenge'] != None):
     print "Challenge query is {0}".format(challenge_query)
     body = '{"id": "' + challenge_query + '","answer": "123456"}'    #any number works in sandbox mode
     r = requests.post(u"{0}/obp/v1.4.0/banks/{1}/accounts/{2}/owner/transaction-request-types/sandbox/transaction-requests/{3}/challenge".format(
-        BASE_URL, OUR_BANK, our_account, transation_req_id), data=body, headers=directlogin_json
+        BASE_URL, OUR_BANK, our_account, transation_req_id), data=body, headers=merge(directlogin, content_json)
     )
 
     challenge_response = r.json()
