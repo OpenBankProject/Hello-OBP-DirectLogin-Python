@@ -7,7 +7,7 @@ import sys, requests
 
 USERNAME     = 'robert.x.0.gh@example.com'
 PASSWORD     = '3e3a3102'
-CONSUMER_KEY = 'test' 
+CONSUMER_KEY = 'adwf5qomvtvtya5ss3z5aizpr2b4hq054aoqa2t2' 
 
 # API server URL
 BASE_URL  = "http://127.0.0.1:8080"
@@ -38,6 +38,8 @@ if (r.status_code != 200):
 
 # login ok - create authorization headers
 token = r.json()['token']
+
+print token
 
 directlogin  = { 'Authorization' : 'DirectLogin token=%s' % token}
 content_json = { 'content-type'  : 'application/json' }
