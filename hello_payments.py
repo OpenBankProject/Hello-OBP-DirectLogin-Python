@@ -39,7 +39,7 @@ if (r.status_code != 200):
 # login ok - create authorization headers
 token = r.json()['token']
 
-print token
+print "Received token: {0}".format(token)
 
 directlogin  = { 'Authorization' : 'DirectLogin token=%s' % token}
 content_json = { 'content-type'  : 'application/json' }
