@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys, requests
 
-API_HOST   = 'https://bnpparibas-api.openbankproject.com'
+API_HOST   = 'http://127.0.0.1:8080'
 BANK_ID    = 'obp-bank-x-gh'
 # ACCOUNT_ID = 'f65e28a5-9abe-428f-85bb-6c3c38122adb' # different id's for bnp paribas sandbox
 
@@ -11,7 +11,7 @@ URL_LOGIN  = '{0}/my/logins/direct'.format(API_HOST)
 # Credentials
 USERNAME     = 'robert.x.0.gh@example.com'
 PASSWORD     = '3e3a3102'
-CONSUMER_KEY = 'ul5qdxwfpxr0oy04p1u4s0v54gd153h1t4bfu0ey'
+CONSUMER_KEY = 'adwf5qomvtvtya5ss3z5aizpr2b4hq054aoqa2t2'
 
 # Payload
 loginData = {
