@@ -7,7 +7,7 @@ import sys, requests
 
 USERNAME     = 'robert.x.0.gh@example.com'
 PASSWORD     = '3e3a3102'
-CONSUMER_KEY = 'adwf5qomvtvtya5ss3z5aizpr2b4hq054aoqa2t2' 
+CONSUMER_KEY = 'adwf5qomvtvtya5ss3z5aizpr2b4hq054aoqa2t2'
 
 # API server URL
 BASE_URL  = "http://127.0.0.1:8080"
@@ -15,7 +15,8 @@ LOGIN_URL = '{0}/my/logins/direct'.format(BASE_URL)
 
 # API server will redirect your browser to this URL, should be non-functional
 # You will paste the redirect location here when running the script
-CALLBACK_URI = 'http://127.0.0.1/cb'# Our account's bank
+CALLBACK_URI = 'http://127.0.0.1/cb' # Our account's bank
+
 OUR_BANK = 'obp-bank-x-gh'
 # Our counterpart account id (of the same currency)
 OUR_COUNTERPART = 'f65e28a5-9abe-428f-85bb-6c3c38122adb'
@@ -27,13 +28,17 @@ OUR_CURRENCY = 'GBP'
 OUR_VALUE = '0.01'
 OUR_VALUE_LARGE = '1000.00'
 
-
-# You probably don't need to change those
-loginHeader  = { 'Authorization' : 'DirectLogin username="%s",password="%s",consumer_key="%s"' % (USERNAME, PASSWORD, CONSUMER_KEY)}
+# Header
+loginHeader = { 'Authorization' : 'DirectLogin username="%s",password="%s",consumer_key="%s"' % (USERNAME, PASSWORD, CONSUMER_KEY)}
+# Payload
+loginData = {
+    'dl_username': '%s' % USERNAME,
+    'dl_password': '%s' % PASSWORD,
+    'dl_consumer_key': '%s' % CONSUMER_KEY}
 
 # login and receive authorized token
 print 'Login as {0} to {1}'.format(loginHeader, LOGIN_URL)
-r = requests.get(LOGIN_URL, headers=loginHeader)
+r = requests.get(LOGIN_URL, json=loginData, headers=loginHeader)
 
 if (r.status_code != 200):
     print "error: could not login"
@@ -85,12 +90,16 @@ print challenge_type
 
 print
 print "Initiate transaction requesti (small value)"
+
 send_to = {"bank": OUR_BANK, "account": OUR_COUNTERPART}
+
 payload = '{"to": {"account_id": "' + send_to['account'] +'", "bank_id": "' + send_to['bank'] + \
     '"}, "value": {"currency": "' + OUR_CURRENCY + '", "amount": "' + OUR_VALUE + '"}, "description": "Description abc", "challenge_type" : "' + \
     challenge_type + '"}'
+
 r = requests.post(u"{0}/obp/v1.4.0/banks/{1}/accounts/{2}/owner/transaction-request-types/{3}/transaction-requests".format(
     BASE_URL, OUR_BANK, our_account, challenge_type), data=payload, headers=merge(directlogin, content_json))
+
 initiate_response = r.json()
 
 if "error" in initiate_response:
@@ -120,11 +129,14 @@ else:
 print
 print "Initiate transaction request (large value)"
 send_to = {"bank": OUR_BANK, "account": OUR_COUNTERPART}
+
 payload = '{"to": {"account_id": "' + send_to['account'] +'", "bank_id": "' + send_to['bank'] + \
     '"}, "value": {"currency": "' + OUR_CURRENCY + '", "amount": "' + OUR_VALUE_LARGE + '"}, "description": "Description abc", "challenge_type" : "' + \
     challenge_type + '"}'
+
 r = requests.post(u"{0}/obp/v1.4.0/banks/{1}/accounts/{2}/owner/transaction-request-types/{3}/transaction-requests".format(
     BASE_URL, OUR_BANK, our_account, challenge_type), data=payload, headers=merge(directlogin, content_json))
+
 initiate_response = r.json()
 
 if "error" in initiate_response:
