@@ -7,8 +7,12 @@ def merge(x, y):
     z.update(y)
     return z
 
-# Note: in order to use this example, you need to have at least one account
+# Set search query and elasticsearch index
+SEARCH_QUERY="q=obp"
+ES_INDEX = "metrics"
 
+# Note: in order to use this example, you need to have an user 
+# that has entitlement CanSearchWarehouse or CanSearchMetrics
 USERNAME     = 'robert.x.0.gh@example.com'
 PASSWORD     = '3e3a3102'
 CONSUMER_KEY = 'adwf5qomvtvtya5ss3z5aizpr2b4hq054aoqa2t2'
@@ -21,9 +25,6 @@ LOGIN_URL = '{0}/my/logins/direct'.format(BASE_URL)
 
 # You will paste the redirect location here when running the script
 CALLBACK_URI = 'http://127.0.0.1/cb'
-
-# Our account's bank
-OUR_BANK = 'obp-bank-x-gh'
 
 # You probably don't need to change those
 loginHeader  = { 'Authorization' : 'DirectLogin username="%s",password="%s",consumer_key="%s"' % (USERNAME, PASSWORD, CONSUMER_KEY)}
@@ -45,29 +46,10 @@ directlogin  = { 'Authorization' : 'DirectLogin token=%s' % token}
 content_json = { 'content-type'  : 'application/json' }
 limit        = { 'obp_limit'     : '25' }
 
-# Get all private accounts for this user
-response = requests.get(u"{0}/obp/v1.4.0/banks/{1}/accounts/private".format(BASE_URL, OUR_BANK), headers=directlogin)
-print response.status_code
-
-# Print accounts 
-accounts = response.json()['accounts']
-for a in accounts:
-    print a['id']
-
-# Just picking first account
-our_account = accounts[0]['id']
-print "our account: {0}".format(our_account)
-
-# Prepare post data and set new label value
-post_data = {
-    'id' : '%s' % our_account,
-    'label' : 'New label',
-    'bank_id': '%s' % OUR_BANK 
-}
-
-# Send post request with attached json with new label value
-response = requests.post(u"{0}/obp/v1.4.0/banks/{1}/accounts/{2}".format(BASE_URL, OUR_BANK, our_account), json=post_data, headers=merge(directlogin, content_json))
+# Perform search
+response = requests.get(u"{0}/obp/v2.0.0/search/{1}/{2}".format(BASE_URL, ES_INDEX, SEARCH_QUERY), headers=merge(directlogin, content_json))
 
 # Print result
 print response.status_code
 print response.text
+
