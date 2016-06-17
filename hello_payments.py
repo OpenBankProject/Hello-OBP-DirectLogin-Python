@@ -5,22 +5,24 @@ import sys, requests
 # Note: in order to use this example, you need to have at least one account
 # that you can send money from (i.e. be the owner).
 
-USERNAME     = 'robert.x.0.gh@example.com'
-PASSWORD     = '3e3a3102'
-CONSUMER_KEY = 'adwf5qomvtvtya5ss3z5aizpr2b4hq054aoqa2t2' 
+USERNAME     = 'robert.x.d.n@example.com'
+PASSWORD     = '8596d7de'
+CONSUMER_KEY = 'fj43ona2cxxo3xrqyojdwzfpktwhj5avzwnee0jm'
 
 # API server URL
-BASE_URL  = "http://127.0.0.1:8080"
+BASE_URL  = "https://apisandbox.openbankproject.com"
 LOGIN_URL = '{0}/my/logins/direct'.format(BASE_URL)
 
 # API server will redirect your browser to this URL, should be non-functional
 # You will paste the redirect location here when running the script
 CALLBACK_URI = 'http://127.0.0.1/cb'# Our account's bank
-OUR_BANK = 'obp-bank-x-gh'
+OUR_BANK = 'obp-bankx-n'
 # Our counterpart account id (of the same currency)
-OUR_COUNTERPART = 'f65e28a5-9abe-428f-85bb-6c3c38122adb'
+OUR_COUNTERPART = 'Hackathon-22'
+COUNTERPART_BANK = 'rbs'
+
 # Our currency to use
-OUR_CURRENCY = 'GBP'
+OUR_CURRENCY = 'EUR'
 
 # Our value to transfer
 # values below 1000 do not requre challenge request
@@ -85,7 +87,7 @@ print challenge_type
 
 print
 print "Initiate transaction requesti (small value)"
-send_to = {"bank": OUR_BANK, "account": OUR_COUNTERPART}
+send_to = {"bank": COUNTERPART_BANK, "account": OUR_COUNTERPART}
 payload = '{"to": {"account_id": "' + send_to['account'] +'", "bank_id": "' + send_to['bank'] + \
     '"}, "value": {"currency": "' + OUR_CURRENCY + '", "amount": "' + OUR_VALUE + '"}, "description": "Description abc", "challenge_type" : "' + \
     challenge_type + '"}'
@@ -119,7 +121,7 @@ else:
 
 print
 print "Initiate transaction request (large value)"
-send_to = {"bank": OUR_BANK, "account": OUR_COUNTERPART}
+send_to = {"bank": COUNTERPART_BANK, "account": OUR_COUNTERPART}
 payload = '{"to": {"account_id": "' + send_to['account'] +'", "bank_id": "' + send_to['bank'] + \
     '"}, "value": {"currency": "' + OUR_CURRENCY + '", "amount": "' + OUR_VALUE_LARGE + '"}, "description": "Description abc", "challenge_type" : "' + \
     challenge_type + '"}'
@@ -150,4 +152,3 @@ if (initiate_response['challenge'] != None):
 else:
     #There was no challenge, transaction was created immediately
     print "Transaction was successfully created: {0}".format(initiate_response["transaction_ids"])
-
