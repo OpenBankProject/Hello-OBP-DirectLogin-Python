@@ -11,9 +11,8 @@ $ pip install -r requirements.txt
 ## Hello OBP
 
 ```bash
-$ python2 hello_obp.py
-
-$ python3 hello.obp3.py
+#compatible with python2 and 3
+$ python hello_obp.py
 ```
 
 
