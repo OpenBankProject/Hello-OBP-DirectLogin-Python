@@ -119,36 +119,37 @@ else:
     #There was no challenge, transaction was created immediately
     print "Transaction was successfully created: {0}".format(initiate_response["transaction_ids"])
 
-print
-print "Initiate transaction request (large value)"
-send_to = {"bank": COUNTERPART_BANK, "account": OUR_COUNTERPART}
-payload = '{"to": {"account_id": "' + send_to['account'] +'", "bank_id": "' + send_to['bank'] + \
-    '"}, "value": {"currency": "' + OUR_CURRENCY + '", "amount": "' + OUR_VALUE_LARGE + '"}, "description": "Description abc", "challenge_type" : "' + \
-    challenge_type + '"}'
-r = requests.post(u"{0}/obp/v1.4.0/banks/{1}/accounts/{2}/owner/transaction-request-types/{3}/transaction-requests".format(
-    BASE_URL, OUR_BANK, our_account, challenge_type), data=payload, headers=merge(directlogin, content_json))
-initiate_response = r.json()
 
-if "error" in initiate_response:
-    sys.exit("Got an error: " + str(initiate_response))
-
-if (initiate_response['challenge'] != None):
-    #we need to answer the challenge
-    challenge_query = initiate_response['challenge']['id']
-    transation_req_id = initiate_response['id']['value']
-
-    print "Challenge query is {0}".format(challenge_query)
-    body = '{"id": "' + challenge_query + '","answer": "123456"}'    #any number works in sandbox mode
-    r = requests.post(u"{0}/obp/v1.4.0/banks/{1}/accounts/{2}/owner/transaction-request-types/sandbox/transaction-requests/{3}/challenge".format(
-        BASE_URL, OUR_BANK, our_account, transation_req_id), data=body, headers=merge(directlogin, content_json)
-    )
-
-    challenge_response = r.json()
-    if "error" in challenge_response:
-        sys.exit("Got an error: " + str(challenge_response))
-
-    print "Transaction status: {0}".format(challenge_response['status'])
-    print "Transaction created: {0}".format(challenge_response["transaction_ids"])
-else:
-    #There was no challenge, transaction was created immediately
-    print "Transaction was successfully created: {0}".format(initiate_response["transaction_ids"])
+#print
+#print "Initiate transaction request (large value)"
+#send_to = {"bank": COUNTERPART_BANK, "account": OUR_COUNTERPART}
+#payload = '{"to": {"account_id": "' + send_to['account'] +'", "bank_id": "' + send_to['bank'] + \
+#    '"}, "value": {"currency": "' + OUR_CURRENCY + '", "amount": "' + OUR_VALUE_LARGE + '"}, "description": "Description abc", "challenge_type" : "' + \
+#    challenge_type + '"}'
+#r = requests.post(u"{0}/obp/v1.4.0/banks/{1}/accounts/{2}/owner/transaction-request-types/{3}/transaction-requests".format(
+#    BASE_URL, OUR_BANK, our_account, challenge_type), data=payload, headers=merge(directlogin, content_json))
+#initiate_response = r.json()
+#
+#if "error" in initiate_response:
+#    sys.exit("Got an error: " + str(initiate_response))
+#
+#if (initiate_response['challenge'] != None):
+#    #we need to answer the challenge
+#    challenge_query = initiate_response['challenge']['id']
+#    transation_req_id = initiate_response['id']['value']
+#
+#    print "Challenge query is {0}".format(challenge_query)
+#    body = '{"id": "' + challenge_query + '","answer": "123456"}'    #any number works in sandbox mode
+#    r = requests.post(u"{0}/obp/v1.4.0/banks/{1}/accounts/{2}/owner/transaction-request-types/sandbox/transaction-requests/{3}/challenge".format(
+#        BASE_URL, OUR_BANK, our_account, transation_req_id), data=body, headers=merge(directlogin, content_json)
+#    )
+#
+#    challenge_response = r.json()
+#    if "error" in challenge_response:
+#        sys.exit("Got an error: " + str(challenge_response))
+#
+#    print "Transaction status: {0}".format(challenge_response['status'])
+#    print "Transaction created: {0}".format(challenge_response["transaction_ids"])
+#else:
+#    #There was no challenge, transaction was created immediately
+#    print "Transaction was successfully created: {0}".format(initiate_response["transaction_ids"])
