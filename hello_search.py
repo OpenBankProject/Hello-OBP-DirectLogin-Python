@@ -6,12 +6,13 @@ ES_INDEX = "metrics"
 
 # Note: in order to use this example, you need to have an user 
 # that has entitlement CanSearchWarehouse or CanSearchMetrics
-USERNAME     = 'robert.x.0.gh@example.com'
-PASSWORD     = '3e3a3102'
-CONSUMER_KEY = 'adwf5qomvtvtya5ss3z5aizpr2b4hq054aoqa2t2'
+USERNAME     = 'robert.x.d.n@example.com'
+PASSWORD     = '8596d7de'
+CONSUMER_KEY = 'fj43ona2cxxo3xrqyojdwzfpktwhj5avzwnee0jm'
 
 # API server URL
-BASE_URL  = "http://127.0.0.1:8080"
+BASE_URL  = "https://apisandbox.openbankproject.com"
+
 LOGIN_URL = '{0}/my/logins/direct'.format(BASE_URL)
 
 # API server will redirect your browser to this URL, should be non-functional
