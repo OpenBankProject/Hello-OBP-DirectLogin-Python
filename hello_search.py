@@ -1,12 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import sys, requests
-# Helper function to merge headers
-def merge(x, y):
-    z = x.copy()
-    z.update(y)
-    return z
-
 # Set search query and elasticsearch index
 SEARCH_QUERY="q=obp"
 ES_INDEX = "metrics"
@@ -22,12 +15,19 @@ BASE_URL  = "http://127.0.0.1:8080"
 LOGIN_URL = '{0}/my/logins/direct'.format(BASE_URL)
 
 # API server will redirect your browser to this URL, should be non-functional
-
 # You will paste the redirect location here when running the script
 CALLBACK_URI = 'http://127.0.0.1/cb'
 
 # You probably don't need to change those
 loginHeader  = { 'Authorization' : 'DirectLogin username="%s",password="%s",consumer_key="%s"' % (USERNAME, PASSWORD, CONSUMER_KEY)}
+
+
+import sys, requests
+# Helper function to merge headers
+def merge(x, y):
+    z = x.copy()
+    z.update(y)
+    return z
 
 # Login and receive authorized token
 print 'Login as {0} to {1}'.format(loginHeader, LOGIN_URL)

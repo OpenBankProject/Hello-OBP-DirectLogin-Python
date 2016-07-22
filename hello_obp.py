@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
 
-import sys, requests
-# Helper function to merge headers
-def merge(x, y):
-    z = x.copy()
-    z.update(y)
-    return z
-
 # Note: in order to use this example, you need to have at least one account
 
+# Our account's bank
+OUR_BANK = 'obp-bank-x-gh'
+
+# username, password and consumer key
 USERNAME     = 'robert.x.0.gh@example.com'
 PASSWORD     = '3e3a3102'
 CONSUMER_KEY = 'adwf5qomvtvtya5ss3z5aizpr2b4hq054aoqa2t2'
@@ -22,11 +19,15 @@ LOGIN_URL = '{0}/my/logins/direct'.format(BASE_URL)
 # You will paste the redirect location here when running the script
 CALLBACK_URI = 'http://127.0.0.1/cb'
 
-# Our account's bank
-OUR_BANK = 'obp-bank-x-gh'
-
 # You probably don't need to change those
 loginHeader  = { 'Authorization' : 'DirectLogin username="%s",password="%s",consumer_key="%s"' % (USERNAME, PASSWORD, CONSUMER_KEY)}
+
+import sys, requests
+# Helper function to merge headers
+def merge(x, y):
+    z = x.copy()
+    z.update(y)
+    return z
 
 # Login and receive authorized token
 print 'Login as {0} to {1}'.format(loginHeader, LOGIN_URL)

@@ -1,13 +1,24 @@
 # -*- coding: utf-8 -*-
 
-import sys, requests
-
 # Note: in order to use this example, you need to have at least one account
 # that you can send money from (i.e. be the owner).
 
+# Our account's bank
+OUR_BANK = 'obp-bank-x-gh'
+
+# username, password and consumer key
 USERNAME     = 'robert.x.0.gh@example.com'
 PASSWORD     = '3e3a3102'
-CONSUMER_KEY = 'adwf5qomvtvtya5ss3z5aizpr2b4hq054aoqa2t2' 
+CONSUMER_KEY = 'adwf5qomvtvtya5ss3z5aizpr2b4hq054aoqa2t2'
+
+# Our counterpart account id (of the same currency)
+OUR_COUNTERPART = 'f65e28a5-9abe-428f-85bb-6c3c38122adb'
+# Our currency to use
+OUR_CURRENCY = 'GBP'
+# Our value to transfer
+# values below 1000 do not requre challenge request
+OUR_VALUE = '0.01'
+OUR_VALUE_LARGE = '1000.00'
 
 # API server URL
 BASE_URL  = "http://127.0.0.1:8080"
@@ -16,20 +27,16 @@ LOGIN_URL = '{0}/my/logins/direct'.format(BASE_URL)
 # API server will redirect your browser to this URL, should be non-functional
 # You will paste the redirect location here when running the script
 CALLBACK_URI = 'http://127.0.0.1/cb'# Our account's bank
-OUR_BANK = 'obp-bank-x-gh'
-# Our counterpart account id (of the same currency)
-OUR_COUNTERPART = 'f65e28a5-9abe-428f-85bb-6c3c38122adb'
-# Our currency to use
-OUR_CURRENCY = 'GBP'
-
-# Our value to transfer
-# values below 1000 do not requre challenge request
-OUR_VALUE = '0.01'
-OUR_VALUE_LARGE = '1000.00'
-
 
 # You probably don't need to change those
 loginHeader  = { 'Authorization' : 'DirectLogin username="%s",password="%s",consumer_key="%s"' % (USERNAME, PASSWORD, CONSUMER_KEY)}
+
+import sys, requests
+
+def merge(x, y):
+    z = x.copy()
+    z.update(y)
+    return z
 
 # login and receive authorized token
 print 'Login as {0} to {1}'.format(loginHeader, LOGIN_URL)
@@ -47,11 +54,6 @@ print "Received token: {0}".format(token)
 directlogin  = { 'Authorization' : 'DirectLogin token=%s' % token}
 content_json = { 'content-type'  : 'application/json' }
 limit        = { 'obp_limit'     : '25' }
-
-def merge(x, y):
-    z = x.copy()
-    z.update(y)
-    return z
 
 #get accounts for a specific bank
 print "Private accounts"
