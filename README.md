@@ -19,5 +19,5 @@ $ python hello_obp.py
 ## Hello Payments
 
 ```bash
-$ python2 hello_payments.py
+$ python3 hello_payments.py
 ```
