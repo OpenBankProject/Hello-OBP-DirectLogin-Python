@@ -21,12 +21,3 @@ $ python hello_obp.py
 ```bash
 $ python2 hello_payments.py
 ```
-
-
-## Import Sandbox
-
-Edit the data to import in the script, then run:
-
-```bash
-$ python2 import_sandbox.py
-```
