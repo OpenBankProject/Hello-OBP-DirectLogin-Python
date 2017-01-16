@@ -1,61 +1,50 @@
 # -*- coding: utf-8 -*-
 
-# Note: in order to use this example, you need to have at least one account
-
-# Our account's bank
-OUR_BANK = 'obp-bankx-n'
-
-# username, password and consumer key
-USERNAME     = 'robert.x.d.n@example.com'
-PASSWORD     = '8596d7de'
-CONSUMER_KEY = 'fj43ona2cxxo3xrqyojdwzfpktwhj5avzwnee0jm'
-
-# API server URL
-BASE_URL  = "https://apisandbox.openbankproject.com"
-#BASE_URL  = "http://localhost:8080"
-
-
-
-LOGIN_URL = '{0}/my/logins/direct'.format(BASE_URL)
-LOGIN_HEADER  = { 'Authorization' : 'DirectLogin username="%s",password="%s",consumer_key="%s"' % (USERNAME, PASSWORD, CONSUMER_KEY)}
-
+from __future__ import print_function    # (at top of module)
 import sys, requests
-# Helper function to merge headers
-def merge(x, y):
-    z = x.copy()
-    z.update(y)
-    return z
 
-# Login and receive authorized token
-print('Login as {0} to {1}'.format(LOGIN_HEADER, LOGIN_URL))
-r = requests.get(LOGIN_URL, headers=LOGIN_HEADER)
 
-if (r.status_code != 200):
-    print("error: could not login")
-    sys.exit(0)
+# Note: in order to use this example, you need to have at least one account
+# that you can send money from (i.e. be the owner).
+# All properties are now kept in one central place
 
-# Login OK - create authorization headers
-token = r.json()['token']
-print("Received token: {0}".format(token))
+from props.danskebank import *
 
-# Prepare headers
-directlogin  = { 'Authorization' : 'DirectLogin token=%s' % token}
-content_json = { 'content-type'  : 'application/json' }
-limit        = { 'obp_limit'     : '25' }
 
-# Get all private accounts for this user
-response = requests.get(u"{0}/obp/v1.4.0/banks/{1}/accounts/private".format(BASE_URL, OUR_BANK), headers=directlogin)
-print(response.status_code)
 
-print (response.text)
-# Print accounts 
-accounts = response.json()['accounts']
+# You probably don't need to change those
+import lib.obp
+obp = lib.obp
+
+obp.setBaseUrl(BASE_URL)
+obp.setApiVersion(API_VERSION)
+
+# login and set authorized token
+obp.login(USERNAME, PASSWORD, CONSUMER_KEY)
+
+#banks = obp.getBanks()
+
+our_bank = OUR_BANK #banks[0]['id']
+print ("our bank: {0}".format(our_bank))
+
+#get accounts for a specific bank
+print (" --- Private accounts")
+
+accounts = obp.getPrivateAccounts(our_bank)
+
 for a in accounts:
-    print(a['id'])
+    print (a['id'])
 
-# Just picking first account
+#just picking first account
 our_account = accounts[0]['id']
-print("our account: {0}".format(our_account))
+print ("our account: {0}".format(our_account))
+
+print ("")
+print (" --- Get owner transactions")
+transactions = obp.getTransactions(our_bank, our_account)
+print ("Got {0} transactions".format(len(transactions)))
+
+
 
 # Prepare post data and set new label value
 post_data = {
@@ -65,7 +54,7 @@ post_data = {
 }
 
 # Send post request with attached json with new label value
-response = requests.post(u"{0}/obp/v1.4.0/banks/{1}/accounts/{2}".format(BASE_URL, OUR_BANK, our_account), json=post_data, headers=merge(directlogin, content_json))
+response = requests.post(u"{0}/obp/{1}/banks/{2}/accounts/{3}".format(BASE_URL, API_VERSION, our_bank, our_account), json=post_data, headers=obp.mergeHeaders(obp.DL_TOKEN, obp.CONTENT_JSON))
 
 # Print result
 print(response.status_code)
