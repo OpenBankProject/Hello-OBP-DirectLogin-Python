@@ -1,9 +1,16 @@
 # -*- coding: utf-8 -*-
 
 import requests
+from settings import (
+    API_HOST,
+    API_BASE_URL,
+    MY_BANK,
+    CLIENT_KEY,
+    CLIENT_SECRET,
+)
 
 SECRET_TOKEN = 'thisisasecret'
-API_HOST = 'http://127.0.0.1:8080'
+#API_HOST = 'http://127.0.0.1:8080'
 URL_IMPORT = '{}/obp/vsandbox/v1.0/data-import?secret_token={}'.format(API_HOST, SECRET_TOKEN)
 
 data = {
@@ -37,7 +44,7 @@ data = {
     }],
 }
 
-print 'Posting to {}'.format(URL_IMPORT)
+print ('Posting to {}'.format(URL_IMPORT))
 response = requests.post(URL_IMPORT, json=data)
-print response.status_code
-print response.text
+print (response.status_code)
+print (response.text)

@@ -2,12 +2,17 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+.gitignore~
+.project
+.pydevproject
+.settings/
 # C extensions
 *.so
 
 # Distribution / packaging
 .Python
+env2/
+env3/
 env/
 build/
 develop-eggs/
