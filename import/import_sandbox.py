@@ -2,9 +2,10 @@
 
 import requests
 
-SECRET_TOKEN = 'thisisasecret'
-API_HOST = 'http://127.0.0.1:8080'
-URL_IMPORT = '{}/obp/vsandbox/v1.0/data-import?secret_token={}'.format(API_HOST, SECRET_TOKEN)
+SECRET_TOKEN = 'secret'
+#API_HOST = 'http://127.0.0.1:8080'
+API_HOST = 'https://danskebank.openbankproject.com'
+URL_IMPORT = '{0}/obp/vsandbox/v1.0/data-import?secret_token={1}'.format(API_HOST, SECRET_TOKEN)
 
 data = {
     'banks': [{
@@ -17,7 +18,7 @@ data = {
     'users': [{
         'email': 'foo@bar.com',
         'password': 'qwertyuiop',
-        'display_name': 'Foo Bar',
+        'display_name': 'foobar',
     }],
     'accounts': [{
         'id': 'a65e28a5-9abe-428f-85bb-6c3c38122adb',
@@ -37,7 +38,7 @@ data = {
     }],
 }
 
-print 'Posting to {}'.format(URL_IMPORT)
+print 'Posting to {0}'.format(URL_IMPORT)
 response = requests.post(URL_IMPORT, json=data)
 print response.status_code
 print response.text
