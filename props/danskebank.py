@@ -1,4 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+Settings for the hello scripts.
 
+You most likely need to edit a few of them, e.g. API_HOST and the OAuth
+credentials.
+"""
 
 OUR_BANK         = 'dan.01.uk.uk'
 
@@ -16,8 +22,8 @@ API_VERSION      = "v2.0.0"
 CALLBACK_URI     = 'http://127.0.0.1/cb'
 
 # Our counterpart account id (of the same currency)
-OUR_COUNTERPART  = '8ca8a7e4-6d02-48e3-a029-0b2bf89de9f0'
-COUNTERPART_BANK = 'gh.29.uk'
+OUR_COUNTERPART  = 'be4c3b50-fa7a-4e38-989b-e6d3c874a368'
+COUNTERPART_BANK = 'dan.01.uk.uk'
 
 # Our currency to use
 OUR_CURRENCY     = 'GBP'
@@ -26,3 +32,5 @@ OUR_CURRENCY     = 'GBP'
 # values below 1000 do not requre challenge request
 OUR_VALUE = '0.01'
 OUR_VALUE_LARGE  = '1000.00'
+PAYMENT_DESCRIPTION = 'Hello Payments v2.1!'
+

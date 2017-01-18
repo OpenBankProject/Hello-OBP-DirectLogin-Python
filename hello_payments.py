@@ -19,11 +19,15 @@ obp.setApiVersion(API_VERSION)
 
 # login and set authorized token
 obp.login(USERNAME, PASSWORD, CONSUMER_KEY)
-
+obp.setCounterPart(COUNTERPART_BANK, OUR_COUNTERPART)
+obp.setPaymentDetails(OUR_CURRENCY, OUR_VALUE)
 banks = obp.getBanks()
 
 our_bank = banks[0]['id']
-cp_bank = our_bank
+
+cp_bank = obp.getCounterBank()
+cp_account = obp.getCounterId()
+
 print ("our bank: {0}".format(our_bank))
 
 #get accounts for a specific bank
@@ -36,7 +40,7 @@ for a in accounts:
 
 #just picking first account
 our_account = accounts[0]['id']
-cp_account = accounts[1]['id']
+
 print ("our account: {0}".format(our_account))
 
 print ("")
@@ -58,9 +62,9 @@ if "error" in initiate_response:
 if (initiate_response['challenge'] != None):
     #we need to answer the challenge
     challenge_query = initiate_response['challenge']['id']
-    transation_req_id = initiate_response['id']['value']
+    transaction_req_id = initiate_response['id']['value']
 
-    challenge_response = obp.answerChallenge(bank, account, transaction_req_id, challenge_query) 
+    challenge_response = obp.answerChallenge(our_bank, our_account, transaction_req_id, challenge_query) 
     if "error" in challenge_response:
         sys.exit("Got an error: " + str(challenge_response))
 

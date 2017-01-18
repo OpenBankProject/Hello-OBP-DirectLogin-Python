@@ -2,7 +2,12 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+.gitignore~
+.project
+.pydevproject
+.settings/
+env2/
+env3/
 # C extensions
 *.so
 

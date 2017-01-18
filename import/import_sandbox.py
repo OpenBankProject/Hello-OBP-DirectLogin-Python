@@ -38,7 +38,7 @@ data = {
     }],
 }
 
-print 'Posting to {0}'.format(URL_IMPORT)
+print ('Posting to {0}'.format(URL_IMPORT))
 response = requests.post(URL_IMPORT, json=data)
-print response.status_code
-print response.text
+print (response.status_code)
+print (response.text)

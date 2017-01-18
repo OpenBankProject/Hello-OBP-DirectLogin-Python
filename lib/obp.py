@@ -10,6 +10,17 @@ DL_TOKEN    = { 'Authorization' : 'DirectLogin token=' }
 
 CONTENT_JSON  = { 'content-type'  : 'application/json' }
 
+def setCounterPart(bank,iD):
+    global COUNTERPART_BANK, OUR_COUNTERPART
+    COUNTERPART_BANK = bank
+    OUR_COUNTERPART = iD
+    
+def setPaymentDetails(currency,value):
+    global OUR_CURRENCY, OUR_VALUE
+    
+    OUR_CURRENCY = currency
+    OUR_VALUE =value
+    
 def setBaseUrl(u):
     global BASE_URL
     BASE_URL = u
@@ -60,7 +71,11 @@ def requestMeeting(purpose_id, provider_id):
     # Print result
     log("code=" + response.status_code + " text=" + response.text)
     return response.json()
+def getCounterBank():
+    return COUNTERPART_BANK
 
+def getCounterId():
+    return OUR_COUNTERPART
 # Get banks
 def getBanks():
     # Prepare headers
@@ -106,18 +121,18 @@ def getChallengeTypes(bank, account):
 
 # Answer the challenge
 def answerChallenge(bank, account, transation_req_id, challenge_query):
-   body = '{"id": "' + challenge_query + '","answer": "123456"}'    #any number works in sandbox mode
-   response = requests.post(u"{0}/obp/v1.4.0/banks/{1}/accounts/{2}/owner/transaction-request-types/sandbox/transaction-requests/{3}/challenge".format(
-        BASE_URL, bank, account, transation_req_id), data=body, headers=merge(DL_TOKEN, CONTENT_JSON)
-   )
-   return response.json
+    body = '{"id": "' + challenge_query + '","answer": "123456"}'    #any number works in sandbox mode
+    response = requests.post(u"{0}/obp/v1.4.0/banks/{1}/accounts/{2}/owner/transaction-request-types/sandbox/transaction-requests/{3}/challenge".format(
+         BASE_URL, bank, account, transation_req_id), data=body, headers=mergeHeaders(DL_TOKEN, CONTENT_JSON)
+    )
+    return response.json
 
 def getTransactionRequest(bank, account, transation_req_id):
     response = requests.get(u"{0}/obp/{1}/banks/{2}/accounts/{3}/owner/transactions".format(BASE_URL, API_VERSION, bank, account), headers=mergeHeaders(DL_TOKEN, CONTENT_JSON))
     return response.json
 
-def initiateTransactionRequest(bank, account, challenge_type):
-    send_to = {"bank": COUNTERPART_BANK, "account": OUR_COUNTERPART}
+def initiateTransactionRequest(bank, account, challenge_type, cp_bank, cp_account):
+    send_to = {"bank": cp_bank, "account": cp_account}
     payload = '{"to": {"account_id": "' + send_to['account'] +'", "bank_id": "' + send_to['bank'] + \
     '"}, "value": {"currency": "' + OUR_CURRENCY + '", "amount": "' + OUR_VALUE + '"}, "description": "Description abc", "challenge_type" : "' + \
     challenge_type + '"}'
