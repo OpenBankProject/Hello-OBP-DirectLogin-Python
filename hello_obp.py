@@ -20,15 +20,21 @@ obp = lib.obp
 obp.setBaseUrl(BASE_URL)
 obp.setApiVersion(API_VERSION)
 
-# login and set authorized token
+# Login and set authorized token
 obp.login(USERNAME, PASSWORD, CONSUMER_KEY)
 
-#banks = obp.getBanks()
+# Get current user 
+print ("")
+print (" --- Get current user")
+user = obp.getCurrentUser()
+print ("current user data:\n{0}".format(user))
+user_id = user['user_id']
+print ("current user id: {0}".format(user))
 
 our_bank = OUR_BANK #banks[0]['id']
 print ("our bank: {0}".format(our_bank))
 
-#get accounts for a specific bank
+# Get accounts for a specific bank
 print (" --- Private accounts")
 
 accounts = obp.getPrivateAccounts(our_bank)
@@ -36,13 +42,14 @@ accounts = obp.getPrivateAccounts(our_bank)
 for a in accounts:
     print (a['id'])
 
-#just picking first account
+# Just picking first account
 our_account = accounts[0]['id']
 print ("our account: {0}".format(our_account))
+
+# Reload account
 print ("")
-#reload account
-account_data = obp.getAccount(our_bank, our_account)
 print (" --- Load our account data")
+account_data = obp.getAccount(our_bank, our_account)
 print ("our account data:\n{0}".format(account_data))
 
 print ("")
@@ -65,7 +72,7 @@ print ("")
 print(response.status_code)
 print(response.text)
 
-#reload account again for comparison
+# Reload account again for comparison
 account = obp.getAccount(our_bank, our_account)
 print ("")
 print (" --- Reload account data")

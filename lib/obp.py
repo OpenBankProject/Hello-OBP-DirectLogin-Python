@@ -71,11 +71,13 @@ def requestMeeting(purpose_id, provider_id):
     # Print result
     log("code=" + response.status_code + " text=" + response.text)
     return response.json()
+
 def getCounterBank():
     return COUNTERPART_BANK
 
 def getCounterId():
     return OUR_COUNTERPART
+
 # Get banks
 def getBanks():
     # Prepare headers
@@ -148,4 +150,55 @@ def initiateTransactionRequest(bank, account, challenge_type, cp_bank, cp_accoun
     challenge_type + '"}'
     response = requests.post(u"{0}/obp/v1.4.0/banks/{1}/accounts/{2}/owner/transaction-request-types/{3}/transaction-requests".format(BASE_URL, bank, account, challenge_type), data=payload, headers=mergeHeaders(DL_TOKEN, CONTENT_JSON))
     return response.json()
+
+# Create counterparty 
+def createCounterparty(bank, account, name):
+    post_data = {
+        'name'                         : '%s' % name,
+        'other_bank_id'                : '%s' % bank,
+        'other_account_id'             : '%s' % account,
+        'other_account_provider'       : '%s' % 'OBP',
+        'other_account_routing_scheme' : '%s' '',
+        'other_account_routing_address': '%s' '',
+        'other_bank_routing_scheme'    : '%s' '',
+        'other_bank_routing_address'   : '%s' '',
+        'is_beneficiary'               : true
+    }
+    # Send post request with attached json
+    response = requests.post(u"{0}/obp/{1}/banks/{2}/accounts/{3}/owner/counterparties".format(BASE_URL, API_VERSION), json=post_data, headers=mergeHeaders(DL_TOKEN, CONTENT_JSON))
+    # Log result
+    log("code=" + response.status_code + " text=" + response.text)
+    return response.json()
+
+# Get all entitlements
+def getAllEntitlements():
+    response = requests.get(u"{0}/obp/{1}/entitlements".format(BASE_URL, API_VERSION), headers=mergeHeaders(DL_TOKEN, CONTENT_JSON))
+    return response.json()
+
+# Get user's entitlements
+def getEntitlements(user, bank):
+    response = requests.get(u"{0}/obp/{1}/banks/{2}/users/{3}/entitlements".format(BASE_URL, API_VERSION, bank, user), headers=mergeHeaders(DL_TOKEN, CONTENT_JSON))
+    return response.json()
+
+# Add system role to user
+def addRole(role, user):
+    post_data = {
+        'bank_id'   : '',
+        'role_name' : '%s' % role 
+    }
+    # Send post request with attached json
+    response = requests.post(u"{0}/obp/{1}/users/{2}/entitlements".format(BASE_URL, API_VERSION, user), json=post_data, headers=mergeHeaders(DL_TOKEN, CONTENT_JSON))
+    # Log result
+    return response.text
+
+# Add entitlement to user
+def addEntitlement(entitlement, user, bank=''):
+    post_data = {
+        'bank_id'   : '%s' % bank,
+        'role_name' : '%s' % entitlement 
+    }
+    # Send post request with attached json
+    response = requests.post(u"{0}/obp/{1}/users/{2}/entitlements".format(BASE_URL, API_VERSION, user), json=post_data, headers=mergeHeaders(DL_TOKEN, CONTENT_JSON))
+    # Log result
+    return response.text
 
