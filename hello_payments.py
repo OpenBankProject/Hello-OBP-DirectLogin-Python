@@ -9,6 +9,7 @@ import sys, requests
 # All properties are now kept in one central place
 
 from props.danskebank import *
+#from props.socgen import *
 
 # You probably don't need to change those
 import lib.obp
@@ -49,11 +50,13 @@ transactions = obp.getTransactions(our_bank, our_account)
 print ("Got {0} transactions".format(len(transactions)))
 
 print (" --- Get challenge request types")
-challenge_type = obp.getChallengeTypes(our_bank, our_account) 
+challenge_types = obp.getChallengeTypes(our_bank, our_account) 
+print (challenge_types)
+challenge_type = challenge_types[0]
 print (challenge_type)
 
 print ("")
-print ("Initiate transaction requesti (small value)")
+print ("Initiate transaction request (small value)")
 initiate_response = obp.initiateTransactionRequest(our_bank, our_account, challenge_type, cp_bank, cp_account) 
 
 if "error" in initiate_response:
@@ -72,5 +75,6 @@ if (initiate_response['challenge'] != None):
     print ("Transaction created: {0}".format(challenge_response["transaction_ids"]))
 else:
     #There was no challenge, transaction was created immediately
-    print ("Transaction was successfully created: {0}".format(initiate_response["transaction_ids"]))
+    print ("Transaction was successfully created:")
+    print ("{0}".format(initiate_response))
 

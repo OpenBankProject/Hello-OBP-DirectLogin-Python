@@ -109,6 +109,12 @@ def getPrivateAccounts(bank):
     response = requests.get(u"{0}/obp/{1}/banks/{2}/accounts/private".format(BASE_URL, API_VERSION, bank), headers=mergeHeaders(DL_TOKEN, CONTENT_JSON))
     return response.json()['accounts']
 
+# Get a single account
+def getAccount(bank, account):
+    # Prepare headers
+    response = requests.get(u"{0}/obp/{1}/my/banks/{2}/accounts/{3}/account".format(BASE_URL, API_VERSION, bank, account), headers=mergeHeaders(DL_TOKEN, CONTENT_JSON))
+    return response.json()
+
 # Get owner's transactions
 def getTransactions(bank, account):
     response = requests.get(u"{0}/obp/{1}/banks/{2}/accounts/{3}/owner/transactions".format(BASE_URL, API_VERSION, bank, account), headers=mergeHeaders(DL_TOKEN, CONTENT_JSON))
@@ -117,7 +123,11 @@ def getTransactions(bank, account):
 # Get challenge types
 def getChallengeTypes(bank, account):
     response = requests.get(u"{0}/obp/{1}/banks/{2}/accounts/{3}/owner/transaction-request-types".format(BASE_URL, API_VERSION, bank, account), headers=mergeHeaders(DL_TOKEN, CONTENT_JSON))
-    return response.json()[0]['value']
+    types = response.json()['transaction_request_types']
+    res = []
+    for type in types:
+      res.append(type['value'])
+    return res 
 
 # Answer the challenge
 def answerChallenge(bank, account, transation_req_id, challenge_query):

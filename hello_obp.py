@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import print_function    # (at top of module)
-import sys, requests
+import sys, time, requests
 
 
 # Note: in order to use this example, you need to have at least one account
@@ -9,6 +9,7 @@ import sys, requests
 # All properties are now kept in one central place
 
 from props.danskebank import *
+#from props.socgen import *
 
 
 
@@ -38,18 +39,21 @@ for a in accounts:
 #just picking first account
 our_account = accounts[0]['id']
 print ("our account: {0}".format(our_account))
+print ("")
+#reload account
+account_data = obp.getAccount(our_bank, our_account)
+print (" --- Load our account data")
+print ("our account data:\n{0}".format(account_data))
 
 print ("")
-print (" --- Get owner transactions")
-transactions = obp.getTransactions(our_bank, our_account)
-print ("Got {0} transactions".format(len(transactions)))
-
-
+print (" --- Modify account label")
+new_label = "New label %s" % time.strftime("%d/%m/%Y %I:%M:%S")
+print(new_label)
 
 # Prepare post data and set new label value
 post_data = {
     'id' : '%s' % our_account,
-    'label' : 'New label',
+    'label' : '%s' % new_label,
     'bank_id': '%s' % OUR_BANK 
 }
 
@@ -57,5 +61,21 @@ post_data = {
 response = requests.post(u"{0}/obp/{1}/banks/{2}/accounts/{3}".format(BASE_URL, API_VERSION, our_bank, our_account), json=post_data, headers=obp.mergeHeaders(obp.DL_TOKEN, obp.CONTENT_JSON))
 
 # Print result
+print ("")
 print(response.status_code)
 print(response.text)
+
+#reload account again for comparison
+account = obp.getAccount(our_bank, our_account)
+print ("")
+print (" --- Reload account data")
+print ("our account data after label update:\n{0}".format(account))
+
+
+print ("")
+print (" --- Get owner transactions")
+transactions = obp.getTransactions(our_bank, our_account)
+print ("Got {0} transactions".format(len(transactions)))
+for t in transactions: 
+    print ('{0} ({1} {2})'.format(t['id'], t['details']['value']['currency'], t['details']['value']['amount']))
+
