@@ -18,6 +18,10 @@ obp = lib.obp
 obp.setBaseUrl(BASE_URL)
 obp.setApiVersion(API_VERSION)
 
+
+# TODO Refactor to use the word Counterparty instead of Counterpart etc.
+
+
 # login and set authorized token
 obp.login(USERNAME, PASSWORD, CONSUMER_KEY)
 obp.setCounterPart(COUNTERPART_BANK, OUR_COUNTERPART)
