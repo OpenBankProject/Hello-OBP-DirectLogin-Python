@@ -1,7 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function    # (at top of module)
-import obp
+import lib.obp,requests
+obp = lib.obp
 
+# Helper function to merge headers
+def merge(x, y):
+    z = x.copy()
+    z.update(y)
+    return z
 
 # Note: in order to use this example, you need to have at least one account
 # that you can send money from (i.e. be the owner).
@@ -16,9 +22,9 @@ CONSUMER_KEY = '5bno1qctzfsbm1hzfpclmtqx0p5rolf0mdorhoef'
 BASE_URL  = "https://apisandbox.openbankproject.com"
 API_VERSION  = "v1.4.0"
 
-# Our counterpart account id (of the same currency)
-OUR_COUNTERPART = '8ca8a7e4-6d02-48e3-a029-0b2bf89de9f0'
-COUNTERPART_BANK = 'gh.29.uk'
+# Our COUNTERPARTY account id (of the same currency)
+OUR_COUNTERPARTY = '8ca8a7e4-6d02-48e3-a029-0b2bf89de9f0'
+COUNTERPARTY_BANK = 'gh.29.uk'
 
 # Our currency to use
 OUR_CURRENCY = 'GBP'
@@ -75,7 +81,7 @@ print (challenge_type)
 
 print ("")
 print ("Initiate transaction requesti (small value)")
-send_to = {"bank": COUNTERPART_BANK, "account": OUR_COUNTERPART}
+send_to = {"bank": COUNTERPARTY_BANK, "account": OUR_COUNTERPARTY}
 payload = '{"to": {"account_id": "' + send_to['account'] +'", "bank_id": "' + send_to['bank'] + \
     '"}, "value": {"currency": "' + OUR_CURRENCY + '", "amount": "' + OUR_VALUE + '"}, "description": "Description abc", "challenge_type" : "' + \
     challenge_type + '"}'
@@ -110,7 +116,7 @@ else:
 
 #print
 #print "Initiate transaction request (large value)"
-#send_to = {"bank": COUNTERPART_BANK, "account": OUR_COUNTERPART}
+#send_to = {"bank": COUNTERPARTY_BANK, "account": OUR_COUNTERPARTY}
 #payload = '{"to": {"account_id": "' + send_to['account'] +'", "bank_id": "' + send_to['bank'] + \
 #    '"}, "value": {"currency": "' + OUR_CURRENCY + '", "amount": "' + OUR_VALUE_LARGE + '"}, "description": "Description abc", "challenge_type" : "' + \
 #    challenge_type + '"}'

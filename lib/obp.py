@@ -10,10 +10,10 @@ DL_TOKEN    = { 'Authorization' : 'DirectLogin token=' }
 
 CONTENT_JSON  = { 'content-type'  : 'application/json' }
 
-def setCounterPart(bank,iD):
-    global COUNTERPART_BANK, OUR_COUNTERPART
-    COUNTERPART_BANK = bank
-    OUR_COUNTERPART = iD
+def setCounterParty(bank, iD):
+    global COUNTERPARTY_BANK, OUR_COUNTERPARTY
+    COUNTERPARTY_BANK = bank
+    OUR_COUNTERPARTY = iD
     
 def setPaymentDetails(currency,value):
     global OUR_CURRENCY, OUR_VALUE
@@ -73,10 +73,10 @@ def requestMeeting(purpose_id, provider_id):
     return response.json()
 
 def getCounterBank():
-    return COUNTERPART_BANK
+    return COUNTERPARTY_BANK
 
 def getCounterId():
-    return OUR_COUNTERPART
+    return OUR_COUNTERPARTY
 
 # Get banks
 def getBanks():

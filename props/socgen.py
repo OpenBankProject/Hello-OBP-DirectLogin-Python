@@ -21,9 +21,9 @@ API_VERSION      = "v2.1.0"
 # You will paste the redirect location here when running the script
 CALLBACK_URI     = 'http://127.0.0.1/cb'
 
-# Our counterpart account id (of the same currency)
-OUR_COUNTERPART  = '3806441b-bbdf-3c60-b2b3-14e2f645635f'
-COUNTERPART_BANK = '00100'
+# Our COUNTERPARTY account id (of the same currency)
+OUR_COUNTERPARTY  = '3806441b-bbdf-3c60-b2b3-14e2f645635f'
+COUNTERPARTY_BANK = '00100'
 
 # Our currency to use
 OUR_CURRENCY     = 'XAF'
