@@ -6,7 +6,7 @@ from __future__ import print_function    # (at top of module)
 # that you can send money from (i.e. be the owner).
 # All properties are now kept in one central place
 
-from lib.danskebank import *
+from props.danskebank import *
 
 # You probably don't need to change those
 LOGIN_URL = '{0}/my/logins/direct'.format(BASE_URL)
@@ -73,7 +73,7 @@ print (challenge_type)
 
 print ("")
 print ("Initiate transaction requesti (small value)")
-send_to = {"bank": COUNTERPART_BANK, "account": OUR_COUNTERPART}
+send_to = {"bank": COUNTERPARTY_BANK, "account": OUR_COUNTERPARTY}
 payload = '{"to": {"account_id": "' + send_to['account'] +'", "bank_id": "' + send_to['bank'] + \
     '"}, "value": {"currency": "' + OUR_CURRENCY + '", "amount": "' + OUR_VALUE + '"}, "description": "Description abc", "challenge_type" : "' + \
     challenge_type + '"}'
@@ -108,7 +108,7 @@ else:
 
 #print
 #print "Initiate transaction request (large value)"
-#send_to = {"bank": COUNTERPART_BANK, "account": OUR_COUNTERPART}
+#send_to = {"bank": COUNTERPARTY_BANK, "account": OUR_COUNTERPARTY}
 #payload = '{"to": {"account_id": "' + send_to['account'] +'", "bank_id": "' + send_to['bank'] + \
 #    '"}, "value": {"currency": "' + OUR_CURRENCY + '", "amount": "' + OUR_VALUE_LARGE + '"}, "description": "Description abc", "challenge_type" : "' + \
 #    challenge_type + '"}'

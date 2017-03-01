@@ -14,9 +14,9 @@ API_VERSION  = "v2.0.0"
 # You will paste the redirect location here when running the script
 CALLBACK_URI = 'http://127.0.0.1/cb'
 
-# Our counterpart account id (of the same currency)
-OUR_COUNTERPART = '8ca8a7e4-6d02-48e3-a029-0b2bf89de9f0'
-COUNTERPART_BANK = 'gh.29.uk'
+# Our COUNTERPARTY account id (of the same currency)
+OUR_COUNTERPARTY = '8ca8a7e4-6d02-48e3-a029-0b2bf89de9f0'
+COUNTERPARTY_BANK = 'gh.29.uk'
 
 # Our currency to use
 OUR_CURRENCY = 'GBP'

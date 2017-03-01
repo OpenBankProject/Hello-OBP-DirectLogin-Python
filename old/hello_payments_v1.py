@@ -73,7 +73,7 @@ print (challenge_type)
 
 print ("")
 print ("Initiate transaction requesti (small value)")
-send_to = {"bank": COUNTERPART_BANK, "account": OUR_COUNTERPART}
+send_to = {"bank": COUNTERPARTY_BANK, "account": OUR_COUNTERPARTY}
 payload = '{"to": {"account_id": "' + send_to['account'] +'", "bank_id": "' + send_to['bank'] + \
     '"}, "value": {"currency": "' + OUR_CURRENCY + '", "amount": "' + OUR_VALUE + '"}, "description": "Description abc", "challenge_type" : "' + \
     challenge_type + '"}'
@@ -108,7 +108,7 @@ else:
 
 #print
 #print "Initiate transaction request (large value)"
-#send_to = {"bank": COUNTERPART_BANK, "account": OUR_COUNTERPART}
+#send_to = {"bank": COUNTERPARTY_BANK, "account": OUR_COUNTERPARTY}
 #payload = '{"to": {"account_id": "' + send_to['account'] +'", "bank_id": "' + send_to['bank'] + \
 #    '"}, "value": {"currency": "' + OUR_CURRENCY + '", "amount": "' + OUR_VALUE_LARGE + '"}, "description": "Description abc", "challenge_type" : "' + \
 #    challenge_type + '"}'
