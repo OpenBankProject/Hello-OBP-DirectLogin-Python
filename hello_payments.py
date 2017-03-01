@@ -21,14 +21,14 @@ obp.setApiVersion(API_VERSION)
 
 # login and set authorized token
 obp.login(USERNAME, PASSWORD, CONSUMER_KEY)
-obp.setCounterParty(COUNTERPARTY_BANK, OUR_COUNTERPARTY)
-obp.setPaymentDetails(OUR_CURRENCY, OUR_VALUE)
+obp.setCounterParty(COUNTERPARTY_BANK, OUR_COUNTERPARTY,OUR_COUNTERPARTY_ID,OUR_COUNTERPARTY_IBAN)
+obp.setPaymentDetails(OUR_CURRENCY, OUR_VALUE_LARGE)
 banks = obp.getBanks()
 
 our_bank = banks[0]['id']
 
-cp_bank = obp.getCounterBank()
-cp_account = obp.getCounterId()
+cp_bank = obp.getCounterBankId()
+cp_account = obp.getCounterpartyAccountId()
 
 print ("our bank: {0}".format(our_bank))
 

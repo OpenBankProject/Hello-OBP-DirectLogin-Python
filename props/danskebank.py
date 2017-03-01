@@ -24,6 +24,9 @@ CALLBACK_URI     = 'http://127.0.0.1/cb'
 # Our COUNTERPARTY account id (of the same currency)
 OUR_COUNTERPARTY  = 'be4c3b50-fa7a-4e38-989b-e6d3c874a368'
 COUNTERPARTY_BANK = 'dan.01.uk.uk'
+# this following two fields are just used in V210
+OUR_COUNTERPARTY_ID = ''
+OUR_COUNTERPARTY_IBAN = ''
 
 # Our currency to use
 OUR_CURRENCY     = 'GBP'

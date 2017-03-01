@@ -10,10 +10,12 @@ DL_TOKEN    = { 'Authorization' : 'DirectLogin token=' }
 
 CONTENT_JSON  = { 'content-type'  : 'application/json' }
 
-def setCounterParty(bank, iD):
-    global COUNTERPARTY_BANK, OUR_COUNTERPARTY
-    COUNTERPARTY_BANK = bank
-    OUR_COUNTERPARTY = iD
+def setCounterParty(bank_id, account_id,counterparty_id, counterparty_iban):
+    global COUNTERPARTY_BANK, OUR_COUNTERPARTY, OUR_COUNTERPARTY_ID, OUR_COUNTERPARTY_IBAN
+    COUNTERPARTY_BANK = bank_id
+    OUR_COUNTERPARTY = account_id
+    OUR_COUNTERPARTY_ID = counterparty_id
+    OUR_COUNTERPARTY_IBAN = counterparty_iban
     
 def setPaymentDetails(currency,value):
     global OUR_CURRENCY, OUR_VALUE
@@ -72,11 +74,17 @@ def requestMeeting(purpose_id, provider_id):
     log("code=" + response.status_code + " text=" + response.text)
     return response.json()
 
-def getCounterBank():
+def getCounterBankId():
     return COUNTERPARTY_BANK
 
-def getCounterId():
+def getCounterpartyAccountId():
     return OUR_COUNTERPARTY
+
+def getCunterpartyId():
+    return OUR_COUNTERPARTY_ID
+
+def getCunterpartyIban():
+    return OUR_COUNTERPARTY_IBAN
 
 # Get banks
 def getBanks():
@@ -129,7 +137,7 @@ def getChallengeTypes(bank, account):
     res = []
     for type in types:
       res.append(type['value'])
-    return res 
+    return res
 
 # Answer the challenge
 def answerChallenge(bank, account, transation_req_id, challenge_query):
@@ -137,7 +145,7 @@ def answerChallenge(bank, account, transation_req_id, challenge_query):
     response = requests.post(u"{0}/obp/v1.4.0/banks/{1}/accounts/{2}/owner/transaction-request-types/sandbox/transaction-requests/{3}/challenge".format(
          BASE_URL, bank, account, transation_req_id), data=body, headers=mergeHeaders(DL_TOKEN, CONTENT_JSON)
     )
-    return response.json
+    return response.json()
 
 def getTransactionRequest(bank, account, transation_req_id):
     response = requests.get(u"{0}/obp/{1}/banks/{2}/accounts/{3}/owner/transactions".format(BASE_URL, API_VERSION, bank, account), headers=mergeHeaders(DL_TOKEN, CONTENT_JSON))
@@ -202,3 +210,37 @@ def addEntitlement(entitlement, user, bank=''):
     # Log result
     return response.text
 
+
+
+# Answer Transaction Request Challenge. - V210
+def answerChallengeV210(bank, account, transation_req_id, challenge_type, challenge_query):
+    body = '{"id": "' + challenge_query + '","answer": "123456"}'    #any number works in sandbox mode
+    response = requests.post(u"{0}/obp/{1}/banks/{2}/accounts/{3}/owner/transaction-request-types/{4}/transaction-requests/{5}/challenge".format(
+        BASE_URL, API_VERSION, bank, account, challenge_type, transation_req_id), data=body, headers=mergeHeaders(DL_TOKEN, CONTENT_JSON)
+    )
+    return response.json()
+
+# Create Transaction Request. - V210
+# Note : previous called 'initiateTransactionRequest', now keep it the same and OBP-API endpoint name
+def createTransactionRequestV210(bank, account, challenge_type, cp_bank, cp_account,cp_cunterparty_id, cp_cunterparty_iban):
+    if(challenge_type=="SANDBOX_TAN"):
+        send_to = {"bank": cp_bank, "account": cp_account}
+        payload = '{"to": {"account_id": "' + send_to['account'] +'", "bank_id": "' + send_to['bank'] + \
+                  '"}, "value": {"currency": "' + OUR_CURRENCY + '", "amount": "' + OUR_VALUE + '"}, "description": "Description abc"}'
+    elif(challenge_type=="SEPA"):
+        send_to = {"iban": cp_cunterparty_iban}
+        payload = '{"to": {"iban": "' + send_to['iban'] +\
+                  '"}, "value": {"currency": "' + OUR_CURRENCY + '", "amount": "' + OUR_VALUE + '"}, "description": "Description abc", "charge_policy" : "' + \
+                  "SHARED" + '"}'
+    elif   (challenge_type=="COUNTERPARTY"):
+        send_to = {"counterparty_id": cp_cunterparty_id}
+        payload = '{"to": {"counterparty_id": "' + send_to['counterparty_id']  + \
+                  '"}, "value": {"currency": "' + OUR_CURRENCY + '", "amount": "' + OUR_VALUE + '"}, "description": "Description abc", "charge_policy" : "' + \
+                  "SHARED" + '"}'
+    else: # FREE_FORM
+        send_to = {"bank": cp_bank, "account": cp_account}
+        payload = '{"to": {"account_id": "' + send_to['account'] +'", "bank_id": "' + send_to['bank'] + \
+                  '"}, "value": {"currency": "' + OUR_CURRENCY + '", "amount": "' + OUR_VALUE + '"}, "description": "Description abc", "challenge_type" : "' + \
+                  challenge_type + '"}'
+    response = requests.post(u"{0}/obp/{1}/banks/{2}/accounts/{3}/owner/transaction-request-types/{4}/transaction-requests".format(BASE_URL, API_VERSION, bank, account, challenge_type), data=payload, headers=mergeHeaders(DL_TOKEN, CONTENT_JSON))
+    return response.json()
