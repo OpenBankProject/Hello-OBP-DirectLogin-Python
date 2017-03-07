@@ -80,10 +80,10 @@ def getCounterBankId():
 def getCounterpartyAccountId():
     return OUR_COUNTERPARTY
 
-def getCunterpartyId():
+def getCounterpartyId():
     return OUR_COUNTERPARTY_ID
 
-def getCunterpartyIban():
+def getCounterpartyIban():
     return OUR_COUNTERPARTY_IBAN
 
 # Get banks
@@ -159,23 +159,32 @@ def initiateTransactionRequest(bank, account, challenge_type, cp_bank, cp_accoun
     response = requests.post(u"{0}/obp/v1.4.0/banks/{1}/accounts/{2}/owner/transaction-request-types/{3}/transaction-requests".format(BASE_URL, bank, account, challenge_type), data=payload, headers=mergeHeaders(DL_TOKEN, CONTENT_JSON))
     return response.json()
 
-# Create counterparty 
-def createCounterparty(bank, account, name):
+# Create counterparty, input data format: 
+# {
+#   "name":"Friend",
+#   "other_account_routing_scheme":"IBAN",
+#   "other_account_routing_address":"GR1301720530005053000582373",
+#   "other_bank_routing_scheme":"BIC",
+#   "other_bank_routing_address":"PIRBGRAAXXX",
+#   "is_beneficiary":true
+# }
+def createCounterparty(bank_id,
+                       account_id,
+                       name,
+                       other_account_routing_scheme,
+                       other_account_routing_address,
+                       other_bank_routing_scheme,
+                       other_bank_routing_address):
     post_data = {
         'name'                         : '%s' % name,
-        'other_bank_id'                : '%s' % bank,
-        'other_account_id'             : '%s' % account,
-        'other_account_provider'       : '%s' % 'OBP',
-        'other_account_routing_scheme' : '%s' '',
-        'other_account_routing_address': '%s' '',
-        'other_bank_routing_scheme'    : '%s' '',
-        'other_bank_routing_address'   : '%s' '',
-        'is_beneficiary'               : true
+        'other_account_routing_scheme' : '%s' % other_account_routing_scheme ,
+        'other_account_routing_address': '%s' % other_account_routing_address,
+        'other_bank_routing_scheme'    : '%s' % other_bank_routing_scheme,
+        'other_bank_routing_address'   : '%s' % other_bank_routing_address,
+        'is_beneficiary'               : True
     }
     # Send post request with attached json
-    response = requests.post(u"{0}/obp/{1}/banks/{2}/accounts/{3}/owner/counterparties".format(BASE_URL, API_VERSION), json=post_data, headers=mergeHeaders(DL_TOKEN, CONTENT_JSON))
-    # Log result
-    log("code=" + response.status_code + " text=" + response.text)
+    response = requests.post(u"{0}/obp/{1}/banks/{2}/accounts/{3}/owner/counterparties".format(BASE_URL, API_VERSION, bank_id, account_id), json=post_data, headers=mergeHeaders(DL_TOKEN, CONTENT_JSON))
     return response.json()
 
 # Get all entitlements
@@ -222,25 +231,31 @@ def answerChallengeV210(bank, account, transation_req_id, challenge_type, challe
 
 # Create Transaction Request. - V210
 # Note : previous called 'initiateTransactionRequest', now keep it the same and OBP-API endpoint name
-def createTransactionRequestV210(bank, account, challenge_type, cp_bank, cp_account,cp_cunterparty_id, cp_cunterparty_iban):
-    if(challenge_type=="SANDBOX_TAN"):
-        send_to = {"bank": cp_bank, "account": cp_account}
+def createTransactionRequestV210(from_bank_id,
+                                 from_account_id,
+                                 transaction_request_type,
+                                 to_bank_id,
+                                 to_account_id,
+                                 to_counterparty_id,
+                                 to_counterparty_iban):
+    if(transaction_request_type== "SANDBOX_TAN"):
+        send_to = {"bank": to_bank_id, "account": to_account_id}
         payload = '{"to": {"account_id": "' + send_to['account'] +'", "bank_id": "' + send_to['bank'] + \
                   '"}, "value": {"currency": "' + OUR_CURRENCY + '", "amount": "' + OUR_VALUE + '"}, "description": "Description abc"}'
-    elif(challenge_type=="SEPA"):
-        send_to = {"iban": cp_cunterparty_iban}
+    elif(transaction_request_type== "SEPA"):
+        send_to = {"iban": to_counterparty_iban}
         payload = '{"to": {"iban": "' + send_to['iban'] +\
                   '"}, "value": {"currency": "' + OUR_CURRENCY + '", "amount": "' + OUR_VALUE + '"}, "description": "Description abc", "charge_policy" : "' + \
                   "SHARED" + '"}'
-    elif   (challenge_type=="COUNTERPARTY"):
-        send_to = {"counterparty_id": cp_cunterparty_id}
+    elif   (transaction_request_type== "COUNTERPARTY"):
+        send_to = {"counterparty_id": to_counterparty_id}
         payload = '{"to": {"counterparty_id": "' + send_to['counterparty_id']  + \
                   '"}, "value": {"currency": "' + OUR_CURRENCY + '", "amount": "' + OUR_VALUE + '"}, "description": "Description abc", "charge_policy" : "' + \
                   "SHARED" + '"}'
     else: # FREE_FORM
-        send_to = {"bank": cp_bank, "account": cp_account}
+        send_to = {"bank": to_bank_id, "account": to_account_id}
         payload = '{"to": {"account_id": "' + send_to['account'] +'", "bank_id": "' + send_to['bank'] + \
                   '"}, "value": {"currency": "' + OUR_CURRENCY + '", "amount": "' + OUR_VALUE + '"}, "description": "Description abc", "challenge_type" : "' + \
-                  challenge_type + '"}'
-    response = requests.post(u"{0}/obp/{1}/banks/{2}/accounts/{3}/owner/transaction-request-types/{4}/transaction-requests".format(BASE_URL, API_VERSION, bank, account, challenge_type), data=payload, headers=mergeHeaders(DL_TOKEN, CONTENT_JSON))
+                  transaction_request_type + '"}'
+    response = requests.post(u"{0}/obp/{1}/banks/{2}/accounts/{3}/owner/transaction-request-types/{4}/transaction-requests".format(BASE_URL, API_VERSION, from_bank_id, from_account_id, transaction_request_type), data=payload, headers=mergeHeaders(DL_TOKEN, CONTENT_JSON))
     return response.json()
