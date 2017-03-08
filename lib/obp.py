@@ -259,3 +259,30 @@ def createTransactionRequestV210(from_bank_id,
                   transaction_request_type + '"}'
     response = requests.post(u"{0}/obp/{1}/banks/{2}/accounts/{3}/owner/transaction-request-types/{4}/transaction-requests".format(BASE_URL, API_VERSION, from_bank_id, from_account_id, transaction_request_type), data=payload, headers=mergeHeaders(DL_TOKEN, CONTENT_JSON))
     return response.json()
+
+
+# define some help print transaction methods status
+def printMessageNoChallenge(initiate_response):
+    if "error" in initiate_response:
+        sys.exit("Got an error: " + str(initiate_response))
+    print("There was no challenge, transaction was created immediately:")
+    print("The response is : {0}".format(initiate_response))
+    print("Transaction status: {0}".format(initiate_response['status']))
+    print("Transaction id is created: {0}".format(initiate_response["transaction_ids"]))
+
+
+def printMessageWithChallenge(initiate_response):
+    if "error" in initiate_response:
+        sys.exit("Got an error: " + str(initiate_response))
+    print("There was a challenge, transaction was interrupted, the transaction_request is 'INITIATED' and new Transaction id is null:")
+    print("The response is: {0}".format(initiate_response))
+    print("Transaction status: {0}".format(initiate_response['status']))
+    print("New Transaction ID created: {0}".format(initiate_response["transaction_ids"]))
+
+
+def printMessageAfterAnswerChallenge(challenge_response):
+    if "error" in challenge_response:
+        sys.exit("Got an error: " + str(challenge_response))
+    print("The result is: {0}".format(challenge_response))
+    print("Transaction status: {0}".format(challenge_response['status']))
+    print("New Transaction ID created: {0}".format(challenge_response["transaction_ids"]))
