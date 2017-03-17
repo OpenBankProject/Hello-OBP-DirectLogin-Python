@@ -262,31 +262,34 @@ def createTransactionRequestV210(from_bank_id,
 
 
 # define some help print transaction methods status
-def printMessageNoChallenge(initiate_response):
-    if "error" in initiate_response:
-        sys.exit("Got an error: " + str(initiate_response))
+def printMessageNoChallenge(response):
+    if "error" in response:
+        print("The result is: {0}".format(response))
+        # sys.exit("Got an error: " + str(response))
     print("There was no challenge, transaction was created immediately:")
-    print("The response is : {0}".format(initiate_response))
-    print("Transaction status: {0}".format(initiate_response['status']))
-    print("Transaction id is created: {0}".format(initiate_response["transaction_ids"]))
+    print("The response is : {0}".format(response))
+    print("Transaction status: {0}".format(response['status']))
+    print("Transaction id is created: {0}".format(response["transaction_ids"]))
 
 
-def printMessageWithChallenge(initiate_response):
-    if "error" in initiate_response:
-        sys.exit("Got an error: " + str(initiate_response))
+def printMessageWithChallenge(response):
+    if "error" in response:
+        print("The result is: {0}".format(response))
+        # sys.exit("Got an error: " + str(response))
     print("There was a challenge, transaction was interrupted, the transaction_request is 'INITIATED' and new Transaction id is null:")
-    print("The response is: {0}".format(initiate_response))
-    print("Transaction status: {0}".format(initiate_response['status']))
-    print("New Transaction ID created: {0}".format(initiate_response["transaction_ids"]))
+    print("The response is: {0}".format(response))
+    print("Transaction status: {0}".format(response['status']))
+    print("New Transaction ID created: {0}".format(response["transaction_ids"]))
 
 
-def printMessageAfterAnswerChallenge(challenge_response):
-    if "error" in challenge_response:
-        sys.exit("Got an error: " + str(challenge_response))
+def printMessageAfterAnswerChallenge(response):
+    if "error" in response:
+        print("The result is: {0}".format(response))
+        # sys.exit("Got an error: " + str(response))
     print("Transaction is done , and the transaction_request is 'COMPLETED' and new Transaction id is created: :")
-    print("The result is: {0}".format(challenge_response))
-    print("Transaction status: {0}".format(challenge_response['status']))
-    print("New Transaction ID created: {0}".format(challenge_response["transaction_ids"]))
+    print("The result is: {0}".format(response))
+    print("Transaction status: {0}".format(response['status']))
+    print("New Transaction ID created: {0}".format(response["transaction_ids"]))
 
 
 def printGetTransactionsResponse(response,new_transaction_id):
@@ -307,3 +310,10 @@ def printGetTransactionsResponse(response,new_transaction_id):
     for transaction in response:
         count=count + 1
         print (str(count) +":"+str(transaction))
+
+def printCreateCounterparty(response):
+    if "error" in response:
+        print("The result is: {0}".format(response))
+        # sys.exit("Got an error: " + str(response))
+    print("Counterparty is created:")
+    print("The result is: {0}".format(response))
