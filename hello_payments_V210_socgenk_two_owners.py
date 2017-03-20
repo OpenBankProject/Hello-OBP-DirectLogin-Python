@@ -10,7 +10,7 @@ import uuid
 # over Socgen1-k https://socgen-k-api.openbankproject.com/
 
 #########################Step 1 : Login in(OAuth process).################
-from props.localtest_Socgen1_k_two_owners import * #17
+from props.socgen1_k_two_owners import * #17
 
 obp = lib.obp
 obp.setBaseUrl(BASE_URL)
@@ -59,13 +59,6 @@ challenge_response = obp.answerChallengeV210(bank_id=from_bank_id,
                                              challenge_query=challenge_query)
 
 obp.printMessageAfterAnswerChallenge(challenge_response)
-
-print("")
-print("Then we need to check the get Transactions")
-print("Call API - 3 'Get Transactions for Account (Full)-- V210'")
-new_transaction_id = challenge_response["transaction_ids"]
-getTransactions_response = obp.getTransactions(FROM_BANK_ID, FROM_ACCOUNT_ID)
-obp.printGetTransactionsResponse(getTransactions_response, new_transaction_id)
 
 ######################### Step3 - make a payment - SEPA ################
 print("")
@@ -162,4 +155,13 @@ challenge_response = obp.answerChallengeV210(from_bank_id, from_account_id, tran
 if "error" in challenge_response:
     sys.exit("Got an error: " + str(challenge_response))
 
-# obp.printMessageAfterAnswerChallenge(challenge_response)
+obp.printMessageAfterAnswerChallenge(challenge_response)
+
+
+######################### Step4 - Print all transactions ################
+print("")
+print("Then we need to check the get Transactions")
+print("Call API - 1 'Get Transactions for Account (Full)-- V210'")
+new_transaction_id = challenge_response["transaction_ids"]
+getTransactions_response = obp.getTransactions(FROM_BANK_ID, FROM_ACCOUNT_ID)
+obp.printGetTransactionsResponse(getTransactions_response, new_transaction_id)

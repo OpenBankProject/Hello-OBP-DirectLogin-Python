@@ -11,7 +11,7 @@ import sys, requests
 # All needed users and accounts are now kept in 'localtest_Socgen1-k.py' or 'localtest_Socgen2-k.py'' or 'localtest_Socgen2-k'', 
 # You can pick up one to test the sandbox you want, just modify the following lines to switch props
 # from props.localtest_Socgen1_k import *
-from props.localtest_Socgen2_k import *
+from props.socgen2_k import *
 # from props.localtest_Socgen2_k_local import *
 
 

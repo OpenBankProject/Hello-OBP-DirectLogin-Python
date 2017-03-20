@@ -161,13 +161,16 @@ def initiateTransactionRequest(bank, account, challenge_type, cp_bank, cp_accoun
 
 # Create counterparty, input data format: 
 # {
-#   "name":"Friend",
-#   "other_account_routing_scheme":"IBAN",
-#   "other_account_routing_address":"GR1301720530005053000582373",
-#   "other_bank_routing_scheme":"BIC",
-#   "other_bank_routing_address":"PIRBGRAAXXX",
-#   "is_beneficiary":true
+#     "name": "test3",
+#     "other_account_routing_scheme": "BankAccountID",
+#     "other_account_routing_address": "1000203892",
+#     "other_bank_routing_scheme": "BankId",
+#     "other_bank_routing_address": "00100",
+#     "other_branch_routing_scheme": "OBP",
+#     "other_branch_routing_address": "Berlin",
+#     "is_beneficiary": true
 # }
+
 def createCounterparty(bank_id,
                        account_id,
                        name,
@@ -181,6 +184,8 @@ def createCounterparty(bank_id,
         'other_account_routing_address': '%s' % other_account_routing_address,
         'other_bank_routing_scheme'    : '%s' % other_bank_routing_scheme,
         'other_bank_routing_address'   : '%s' % other_bank_routing_address,
+        'other_branch_routing_scheme'  : 'OBP', # not useful now, set default value
+        'other_branch_routing_address' : 'Berlin', # not useful now, set default value
         'is_beneficiary'               : True
     }
     # Send post request with attached json
