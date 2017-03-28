@@ -2,7 +2,7 @@
 from __future__ import print_function  # (at top of module)
 import sys, requests
 import lib.obp
-
+from props.localtest_kafka import *
 
 # test payment workflow
 # prerequisites:
@@ -24,8 +24,6 @@ import lib.obp
 # 8 Get Transactions for Account (Full)-- V210
 
 #########################Step1 : Direct Login process ################
-from props.localtest_kafka import *
-
 obp = lib.obp
 obp.setBaseUrl(BASE_URL)
 obp.setApiVersion(API_VERSION_V210)

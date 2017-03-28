@@ -2,7 +2,7 @@
 from __future__ import print_function  # (at top of module)
 import sys, requests
 import uuid
-
+from props.localtest_mapper import *
 import lib.obp
 
 # test payment workflow
@@ -25,7 +25,6 @@ import lib.obp
 # 9 Get Transactions for Account (Full)-- V210
 
 #########################Step1 : Direct Login process ################import uuid
-from props.localtest_mapper import *
 
 obp = lib.obp
 obp.setBaseUrl(BASE_URL)
