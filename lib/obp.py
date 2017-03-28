@@ -130,6 +130,11 @@ def getTransactions(bank, account):
     response = requests.get(u"{0}/obp/{1}/banks/{2}/accounts/{3}/owner/transactions".format(BASE_URL, API_VERSION, bank, account), headers=mergeHeaders(DL_TOKEN, CONTENT_JSON))
     return response.json()['transactions']
 
+# Get Transaction by Id.
+def getTransaction(bank_id, account_id, transaction_id):
+    response = requests.get(u"{0}/obp/{1}/banks/{2}/accounts/{3}/owner/transactions/{4}/transaction".format(BASE_URL, API_VERSION, bank_id, account_id, transaction_id), headers=mergeHeaders(DL_TOKEN, CONTENT_JSON))
+    return response.json()
+
 # Get challenge types
 def getChallengeTypes(bank, account):
     response = requests.get(u"{0}/obp/{1}/banks/{2}/accounts/{3}/owner/transaction-request-types".format(BASE_URL, API_VERSION, bank, account), headers=mergeHeaders(DL_TOKEN, CONTENT_JSON))
@@ -227,10 +232,16 @@ def addEntitlement(entitlement, user, bank=''):
 
 
 # Answer Transaction Request Challenge. - V210
-def answerChallengeV210(bank_id, account_id, transation_req_id, challenge_type, challenge_query):
-    body = '{"id": "' + challenge_query + '","answer": "123456"}'    #any number works in sandbox mode
-    response = requests.post(u"{0}/obp/{1}/banks/{2}/accounts/{3}/owner/transaction-request-types/{4}/transaction-requests/{5}/challenge".format(
-        BASE_URL, API_VERSION, bank_id, account_id, challenge_type, transation_req_id), data=body, headers=mergeHeaders(DL_TOKEN, CONTENT_JSON)
+def answerChallengeV210(bank_id,
+                        account_id, 
+                        transation_req_id, 
+                        challenge_type,
+                        challenge_query):
+    body = '{"id": "' + challenge_query + '","answer": "123456"}'  # any number works in sandbox mode
+    response = requests.post( u"{0}/obp/{1}/banks/{2}/accounts/{3}/owner/transaction-request-types/{4}/transaction-requests/{5}/challenge".format(
+            BASE_URL, API_VERSION, bank_id, account_id, challenge_type,
+            transation_req_id), data=body,
+        headers=mergeHeaders(DL_TOKEN, CONTENT_JSON)
     )
     return response.json()
 
@@ -297,28 +308,24 @@ def printMessageAfterAnswerChallenge(response):
     print("New Transaction ID created: {0}".format(response["transaction_ids"]))
 
 
-def printGetTransactionsResponse(response,new_transaction_id):
+def printGetTransactions(response):
     if "error" in response:
         sys.exit("Got an error: " + str(response))
-        
-    print("Check the whether new_transaction_id ({0}) is in response: ".format(new_transaction_id))
-    if new_transaction_id in str(response) :
-        for transaction in response:
-            if new_transaction_id in str(response) :
-                print (transaction)
-    else:
-        print ("Note: the new_transaction_id ({0}) is not in response !!!".format(new_transaction_id))
-
-    print("")
     print("Print all the transactions : ")       
     count=0
     for transaction in response:
         count=count + 1
         print (str(count) +":"+str(transaction))
-
+        
+def printGetTransaction(response, newTransactionId):
+    if "error" in response:
+        sys.exit("Got an error: " + str(response))
+    print("Check wther the new transactionId{0} is exsting".format(newTransactionId))
+    print("The result is: {0}".format(response))
+    
 def printCreateCounterparty(response):
     if "error" in response:
-        print("The result is: {0}".format(response))
-        # sys.exit("Got an error: " + str(response))
+        sys.exit("Got an error: " + str(response))
     print("Counterparty is created:")
     print("The result is: {0}".format(response))
+

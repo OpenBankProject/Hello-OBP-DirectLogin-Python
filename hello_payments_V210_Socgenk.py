@@ -10,17 +10,16 @@ import sys, requests
 # Note: 
 # All needed users and accounts are now kept in 'localtest_Socgen1-k.py' or 'localtest_Socgen2-k.py'' or 'localtest_Socgen2-k'', 
 # You can pick up one to test the sandbox you want, just modify the following lines to switch props
-# from props.localtest_Socgen1_k import *
-from props.socgen2_k import *
+from props.socgen1_k import *
+#from props.socgen2_k import *
 # from props.localtest_Socgen2_k_local import *
 
 
-#########################Step 1 : Login in(OAuth process).################
+#########################Step 1 : Direct Login process .################
 
 import lib.obp
 import logging
-
-logging.basicConfig(level=logging.DEBUG)
+#logging.basicConfig(level=logging.DEBUG)
 
 obp = lib.obp
 obp.setBaseUrl(BASE_URL)
@@ -75,4 +74,4 @@ print("Call API - 3 'Get Transactions for Account (Full)-- V210'")
 new_transaction_id = challenge_response["transaction_ids"]
 getTransactions_response = obp.getTransactions(from_bank_id, from_account_id)
 
-obp.printGetTransactionsResponse(getTransactions_response, new_transaction_id)
+obp.printGetTransactions(getTransactions_response)

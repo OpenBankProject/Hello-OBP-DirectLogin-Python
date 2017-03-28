@@ -9,7 +9,7 @@ import uuid
 # This test is calling in  V210 of OBP-API, Create Transaction Request for SANDBOX_TAN
 # over Socgen1-k https://socgen-k-api.openbankproject.com/
 
-#########################Step 1 : Login in(OAuth process).################
+#########################Step 1 :  Direct Login process .################
 from props.socgen1_k_two_owners import * #17
 
 obp = lib.obp
@@ -164,4 +164,4 @@ print("Then we need to check the get Transactions")
 print("Call API - 1 'Get Transactions for Account (Full)-- V210'")
 new_transaction_id = challenge_response["transaction_ids"]
 getTransactions_response = obp.getTransactions(FROM_BANK_ID, FROM_ACCOUNT_ID)
-obp.printGetTransactionsResponse(getTransactions_response, new_transaction_id)
+obp.printGetTransactions(getTransactions_response)
