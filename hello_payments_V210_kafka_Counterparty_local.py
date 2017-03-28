@@ -3,15 +3,15 @@ from __future__ import print_function  # (at top of module)
 import sys, requests
 import uuid
 import lib.obp
+from props.k1_kafka import *
+import logging
+logging.basicConfig(level=logging.DEBUG)
 
 # test payment workflow
 # prerequisites:
-#  1 run OBP-API and run OBP-Kafka_Python 
-#  2 in props
-#    get_counterparties_from_OBP_DB =true 
-#    connector=kafka_vMar2017
-#  3 prepare your own accounts info  
-#    Reference : localtest_kafka.py
+#  1 https://k1.openbankproject.com is working well
+#  2 prepare your own accounts info  
+#    Reference : k1_kafka.py
 #
 # test endpoint list: 
 # 1 Create counterparty for an account - V210
@@ -22,10 +22,9 @@ import lib.obp
 # 6 Answer Transaction Request Challenge. (SEPA)-V210
 # 7 Answer Transaction Request Challenge. (COUNTERPARTY)-V210
 # 8 Get Transaction by Id. -V121
-# 9 Get Transactions for Account (Full)-- V210
+# 9 Get Transactions for Account (Full)-- V121
 
 #########################Step 1 : Direct Login process.################
-from props.localtest_kafka import *
 obp = lib.obp
 obp.setBaseUrl(BASE_URL)
 obp.setApiVersion(API_VERSION_V210)
@@ -216,5 +215,3 @@ obp.printGetTransaction(getTransaction_response, newTransactionId)
 print("Call API - 2 'Get Transactions for Account (Full)-- V121'")
 getTransactions_response = obp.getTransactions(FROM_BANK_ID, FROM_ACCOUNT_ID)
 obp.printGetTransactions(getTransactions_response)
-
-
