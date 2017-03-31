@@ -23,6 +23,7 @@ logging.basicConfig(level=logging.DEBUG)
 # 7 Answer Transaction Request Challenge. (COUNTERPARTY)-V210
 # 8 Get Transaction by Id. -V121
 # 9 Get Transactions for Account (Full)-- V121
+# 10 Get Counterparties of one Account.-- V220
 
 #########################Step 1 : Direct Login process.################
 obp = lib.obp
@@ -215,3 +216,14 @@ obp.printGetTransaction(getTransaction_response, newTransactionId)
 print("Call API - 2 'Get Transactions for Account (Full)-- V121'")
 getTransactions_response = obp.getTransactions(FROM_BANK_ID, FROM_ACCOUNT_ID)
 obp.printGetTransactions(getTransactions_response)
+
+
+######################## Step6 - Get Counterparties ################
+print("")
+print("")
+print("--------- Get the Counterparties")
+print("Call API - 1 'Get Counterparties of one Account..-- V220'")
+obp.setApiVersion(API_VERSION_V220)
+
+getCounterparties_response = obp.getCounterparties(FROM_BANK_ID, FROM_ACCOUNT_ID)
+obp.printGetCounterparties(getCounterparties_response)

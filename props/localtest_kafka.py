@@ -11,13 +11,13 @@ API_VERSION_V210 = "v2.1.0"
 CALLBACK_URI = 'http://127.0.0.1/cb'
 
 # login user: 
-USERNAME = 'robert.x.0.gh@example.com'
-PASSWORD = '3e3a3102'
-CONSUMER_KEY = 'e0xcuubmfzkdbaef30zmrgnwa51dekgnf3vxhavp'
+USERNAME = 'robert.y.9.gh@example.com'
+PASSWORD = 'c9a641df'
+CONSUMER_KEY = '5du40pymqlgufkncfxn3cny5zhlxv3kts5d2a3lj'
 
 # fromAccount info:
-FROM_BANK_ID = 'obp-bank-x-gh'
-FROM_ACCOUNT_ID = 'e0ec24be-5ab1-4760-9189-ad280228c134'
+FROM_BANK_ID = 'obp-bank-y-gh'
+FROM_ACCOUNT_ID = 'e4f001fe-0f0d-4f93-a8b2-d865077315ec'
 
 # toBankAccount and toCounterparty info(These data is from kafka side): 
 TO_BANK_ID = 'obp-bank-x-gh'

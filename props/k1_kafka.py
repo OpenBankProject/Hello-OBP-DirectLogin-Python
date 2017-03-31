@@ -2,6 +2,7 @@
 BASE_URL = "https://k1.openbankproject.com"
 API_VERSION = "v2.0.0"
 API_VERSION_V210 = "v2.1.0"
+API_VERSION_V220 = "v2.2.0"
 # API server will redirect your browser to this URL, should be non-functional
 # You will paste the redirect location here when running the script
 CALLBACK_URI = 'https://k1-explorer.openbankproject.com/cb'

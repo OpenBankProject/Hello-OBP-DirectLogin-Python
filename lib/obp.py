@@ -277,6 +277,12 @@ def createTransactionRequestV210(from_bank_id,
     return response.json()
 
 
+# Get Counterparties of one Account.-V220
+def getCounterparties(bank, account):
+    response = requests.get(u"{0}/obp/{1}/banks/{2}/accounts/{3}/owner/counterparties".format(BASE_URL, API_VERSION, bank, account), headers=mergeHeaders(DL_TOKEN, CONTENT_JSON))
+    return response.json()['counterparties']
+
+
 # define some help print transaction methods status
 def printMessageNoChallenge(response):
     if "error" in response:
@@ -329,3 +335,11 @@ def printCreateCounterparty(response):
     print("Counterparty is created:")
     print("The result is: {0}".format(response))
 
+def printGetCounterparties(response):
+    if "error" in response:
+        sys.exit("Got an error: " + str(response))
+    print("Print all the counterparties : ")
+    count=0
+    for transaction in response:
+        count=count + 1
+        print (str(count) +":"+str(transaction))
