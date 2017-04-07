@@ -343,3 +343,8 @@ def printGetCounterparties(response):
     for transaction in response:
         count=count + 1
         print (str(count) +":"+str(transaction))
+
+def printGetAccount(response):
+    if "error" in response:
+        sys.exit("Got an error: " + str(response))
+    print("The account detail is: {0}".format(response))        

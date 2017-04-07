@@ -4,15 +4,15 @@ import sys, requests
 import uuid
 import lib.obp
 from props.k1_kafka import *
+#from props.apisandbox import *
 import logging
 logging.basicConfig(level=logging.DEBUG)
 
 # test payment workflow
 # prerequisites:
-#  1 https://k1.openbankproject.com is working well
-#  2 prepare your own accounts info  
-#    Reference : k1_kafka.py
-#
+#  1 prepare your own accounts info (please try following props first) 
+#    Reference : k1_kafka.py/apisandbox.py
+#   
 # test endpoint list: 
 # 1 Create counterparty for an account - V210
 # 2 Create Transaction Request. (SANDBOX_TAN)- V210
@@ -24,8 +24,9 @@ logging.basicConfig(level=logging.DEBUG)
 # 8 Get Transaction by Id. -V121
 # 9 Get Transactions for Account (Full)-- V121
 # 10 Get Counterparties of one Account.-- V220
+# 11 Get Counterparties of one Account.-- V220
 
-#########################Step 1 : Direct Login process.################
+print("#########################Step 1 : Direct Login process.################")
 obp = lib.obp
 obp.setBaseUrl(BASE_URL)
 obp.setApiVersion(API_VERSION_V210)
@@ -37,15 +38,16 @@ obp.login(USERNAME, PASSWORD, CONSUMER_KEY)
 # set fromAccount info:
 from_bank_id = FROM_BANK_ID
 from_account_id = FROM_ACCOUNT_ID
+getAccount_response_before = obp.getAccount(FROM_BANK_ID, FROM_ACCOUNT_ID)
 
 # set fromAccount info:
 from_bank_id = FROM_BANK_ID
 from_account_id = FROM_ACCOUNT_ID
 
 
-######################### Step2 - make a payment - SANDBOX_TAN ################
 print("")
 print("")
+print("######################### Step2 - make a payment - SANDBOX_TAN ########")
 # set the toAccount for SANDBOX_TAN
 to_bank_id = TO_BANK_ID
 to_account_id = TO_ACCOUNT_ID
@@ -94,9 +96,9 @@ challenge_response = obp.answerChallengeV210(from_bank_id,
 
 obp.printMessageAfterAnswerChallenge(challenge_response)
 
-######################### Step3 - make a payment - SEPA ################
 print("")
 print("")
+print("######################### Step3 - make a payment - SEPA ################")
 TRANSACTION_REQUEST_TYPE_SEPA = "SEPA"
 print("--------- TRANSACTION_REQUEST_TYPE : {0}".format(TRANSACTION_REQUEST_TYPE_SEPA))
 
@@ -149,9 +151,9 @@ challenge_response = obp.answerChallengeV210(from_bank_id,
 
 obp.printMessageAfterAnswerChallenge(challenge_response)
 
-######################### Step4 - make a payment - COUNTERPARTY ################
 print("")
 print("")
+print("######################### Step4 - make a payment - COUNTERPARTY #######")
 TRANSACTION_REQUEST_TYPE_COUNTERPARTY = "COUNTERPARTY"
 print("--------- TRANSACTION_REQUEST_TYPE : {0}".format(TRANSACTION_REQUEST_TYPE_COUNTERPARTY))
 print("Call API - 1 'Create counterparty for an account. -- V210'")
@@ -203,9 +205,9 @@ challenge_response = obp.answerChallengeV210(from_bank_id,
                                              challenge_id)
 obp.printMessageAfterAnswerChallenge(challenge_response)
 
-######################## Step5 - Get Transactions ################
 print("")
 print("")
+print("######################## Step5 - Get Transactions #####################")
 print("--------- Check the new transaction records")
 print("Call API - 1 'Get Transaction by Id.-- V121'")
 
@@ -218,12 +220,33 @@ getTransactions_response = obp.getTransactions(FROM_BANK_ID, FROM_ACCOUNT_ID)
 obp.printGetTransactions(getTransactions_response)
 
 
-######################## Step6 - Get Counterparties ################
 print("")
 print("")
+print("######################## Step6 - Get Counterparties ################")
 print("--------- Get the Counterparties")
 print("Call API - 1 'Get Counterparties of one Account..-- V220'")
 obp.setApiVersion(API_VERSION_V220)
 
 getCounterparties_response = obp.getCounterparties(FROM_BANK_ID, FROM_ACCOUNT_ID)
 obp.printGetCounterparties(getCounterparties_response)
+
+print("")
+print("")
+print("######################## Step7 - Get Bank Account, check balance ##")
+print("--------- Get the Bank and check the balance")
+print("Call API - 1 'Get Account by Id (Core)  -- V220'")
+obp.setApiVersion(API_VERSION_V220)
+
+print("The Bank Detail before make transactions:")
+obp.printGetAccount(getAccount_response_before)
+balance_before = getAccount_response_before['balance']['amount']
+getAccount_response = obp.getAccount(FROM_BANK_ID, FROM_ACCOUNT_ID)
+print("The Bank Detail after make transactions:")
+obp.printGetAccount(getAccount_response)
+balance_after = getAccount_response['balance']['amount']
+
+print("Check the balance changed, we make 6 times transfer in this script, total transfer should be 3003 (1000+1+1000+1+1000+1):")
+print("The Balance changed between before and after: {0}".format(round((float(balance_before) - float(balance_after)),2)))
+print("Note: for connector = kafka/obpjvm, the balance will not change for now! double checked your BASE_URL")
+
+
