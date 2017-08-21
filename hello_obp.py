@@ -8,7 +8,7 @@ import sys, time, requests
 # that you can send money from (i.e. be the owner).
 # All properties are now kept in one central place
 
-from props.danskebank import *
+from props.default import *
 #from props.socgen import *
 
 
