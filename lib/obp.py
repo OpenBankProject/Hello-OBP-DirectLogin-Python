@@ -52,8 +52,8 @@ def login(username, password, consumer_key):
     login_header  = { 'Authorization' : 'DirectLogin username="%s",password="%s",consumer_key="%s"' % (username, password, consumer_key)}
     # Login and receive authorized token
     log('Login as {0} to {1}'.format(login_header, login_url))
-    r = requests.get(login_url, headers=login_header)
-    if (r.status_code != 200):
+    r = requests.post(login_url, headers=login_header)
+    if (r.status_code != 201):
         log("error: could not login")
         log("text: " + r.text)
         return r.text
