@@ -8,8 +8,7 @@ import sys, requests
 # that you can send money from (i.e. be the owner).
 # All properties are now kept in one central place
 
-from props.danskebank import *
-#from props.socgen import *
+from props.default import *
 
 # You probably don't need to change those
 import lib.obp
