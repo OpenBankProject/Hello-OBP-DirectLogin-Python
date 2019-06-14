@@ -161,7 +161,7 @@ def initiateTransactionRequest(bank, account, challenge_type, cp_bank, cp_accoun
     payload = '{"to": {"account_id": "' + send_to['account'] +'", "bank_id": "' + send_to['bank'] + \
     '"}, "value": {"currency": "' + OUR_CURRENCY + '", "amount": "' + OUR_VALUE + '"}, "description": "Description abc", "challenge_type" : "' + \
     challenge_type + '"}'
-    response = requests.post(u"{0}/obp/v1.4.0/banks/{1}/accounts/{2}/owner/transaction-request-types/{3}/transaction-requests".format(BASE_URL, bank, account, challenge_type), data=payload, headers=mergeHeaders(DL_TOKEN, CONTENT_JSON))
+    response = requests.post(u"{0}/obp/v2.2.0/banks/{1}/accounts/{2}/owner/transaction-request-types/{3}/transaction-requests".format(BASE_URL, bank, account, challenge_type), data=payload, headers=mergeHeaders(DL_TOKEN, CONTENT_JSON))
     return response.json()
 
 # Create counterparty, input data format: 
